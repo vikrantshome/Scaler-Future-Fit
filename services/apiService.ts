@@ -1,6 +1,6 @@
 import { UserInfo, UserResponses, AnalysisResult } from '../types';
 
-const API_URL = import.meta.env.VITE_API_URL || '/api';
+const BASE_URL = import.meta.env.VITE_API_URL || '';
 
 export const saveStudentData = async (
   userInfo: UserInfo, 
@@ -8,10 +8,11 @@ export const saveStudentData = async (
   results: AnalysisResult
 ): Promise<boolean> => {
   try {
+    const endpoint = `${BASE_URL}/api/save-student`;
     console.log("------------------------------------------------");
-    console.log(`🔌 Sending data to backend: ${API_URL}/save-student`);
+    console.log(`🔌 Sending data to backend: ${endpoint}`);
     
-    const response = await fetch(`${API_URL}/save-student`, {
+    const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
