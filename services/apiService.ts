@@ -1,6 +1,6 @@
 import { UserInfo, UserResponses, AnalysisResult } from '../types';
 
-const API_URL = '/api';
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 export const saveStudentData = async (
   userInfo: UserInfo, 
