@@ -3,6 +3,7 @@ import LandingPage from './components/LandingPage';
 import TestInterface from './components/TestInterface';
 import SignupForm from './components/SignupForm';
 import ResultsView from './components/ResultsView';
+import Header from './components/Header';
 import { UserResponses, AnalysisResult, UserInfo } from './types';
 import { calculateResults } from './services/scoringService';
 import { saveStudentData } from './services/apiService';
@@ -56,26 +57,31 @@ function App() {
   };
 
   return (
-    <div className="font-sans text-slate-900">
-      {appState === AppState.LANDING && <LandingPage onStart={startTest} />}
+    <div className="font-sans text-slate-900 bg-slate-50 min-h-screen">
+      <Header />
       
-      {appState === AppState.TEST && <TestInterface onComplete={handleTestComplete} />}
+      {/* Main Content Container with padding-top for fixed header */}
+      <div className="pt-16 md:pt-20">
+        {appState === AppState.LANDING && <LandingPage onStart={startTest} />}
+        
+        {appState === AppState.TEST && <TestInterface onComplete={handleTestComplete} />}
 
-      {appState === AppState.SIGNUP && <SignupForm onSubmit={handleSignupComplete} />}
-      
-      {appState === AppState.LOADING && (
-        <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
-          <Loader2 className="w-12 h-12 text-scaler-blue animate-spin mb-4" />
-          <h2 className="text-2xl font-bold text-slate-800 mb-2">Analyzing your profile...</h2>
-          <p className="text-slate-500 text-center max-w-md">
-            Mapping your personality traits to engineering branches and comparing with industry requirements.
-          </p>
-        </div>
-      )}
-      
-      {appState === AppState.RESULTS && results && responses && (
-        <ResultsView results={results} responses={responses} onRestart={restart} />
-      )}
+        {appState === AppState.SIGNUP && <SignupForm onSubmit={handleSignupComplete} />}
+        
+        {appState === AppState.LOADING && (
+          <div className="min-h-[calc(100vh-80px)] flex flex-col items-center justify-center p-4">
+            <Loader2 className="w-12 h-12 text-scaler-blue animate-spin mb-4" />
+            <h2 className="text-2xl font-bold text-slate-800 mb-2">Analyzing your profile...</h2>
+            <p className="text-slate-500 text-center max-w-md">
+              Mapping your personality traits to engineering branches and comparing with industry requirements.
+            </p>
+          </div>
+        )}
+        
+        {appState === AppState.RESULTS && results && responses && (
+          <ResultsView results={results} responses={responses} onRestart={restart} />
+        )}
+      </div>
     </div>
   );
 }
