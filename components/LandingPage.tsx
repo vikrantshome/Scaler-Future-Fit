@@ -30,7 +30,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
               Start Free Career Fit Test
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
-            <p className="mt-4 text-sm text-slate-400">Takes only 5 minutes • Powered by Scaler School of Technology</p>
+            <p className="mt-4 text-sm text-slate-400">Takes only 5 minutes • Powered Naviksha Ai</p>
           </div>
           <div className="md:w-1/2 flex justify-center">
             {/* Relevant Image: Students coding/collaborating */}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { UserInfo } from '../types';
-import { Lock, User, Mail, Phone, MapPin, GraduationCap, ArrowRight, Loader2 } from 'lucide-react';
+import { Lock, User, Mail, Phone, MapPin, GraduationCap, ArrowRight, Loader2, Building } from 'lucide-react';
 
 interface SignupFormProps {
   onSubmit: (info: UserInfo) => void;
@@ -12,6 +12,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSubmit }) => {
     email: '',
     phone: '',
     grade: 'Class 12',
+    schoolName: '',
     city: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -104,9 +105,24 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSubmit }) => {
                     <option value="Class 10">Class 10</option>
                     <option value="Class 11">Class 11</option>
                     <option value="Class 12">Class 12</option>
-                    <option value="Dropper">Dropper</option>
                 </select>
                 </div>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">School Name</label>
+            <div className="relative">
+              <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <input 
+                type="text" 
+                name="schoolName"
+                required
+                value={formData.schoolName}
+                onChange={handleChange}
+                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-scaler-blue focus:border-transparent outline-none transition-all"
+                placeholder="e.g. DPS Bangalore"
+              />
             </div>
           </div>
 

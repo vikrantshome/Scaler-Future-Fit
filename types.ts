@@ -14,6 +14,7 @@ export interface UserInfo {
   email: string;
   phone: string;
   grade: string;
+  schoolName: string;
   city: string;
 }
 
@@ -26,6 +27,18 @@ export interface UserResponses {
     learningStyle: string;
     engineeringGoal: string;
   };
+}
+
+export interface SubCareer {
+  name: string;
+  description: string;
+  recruiters?: string[];
+}
+
+export interface Exam {
+  name: string;
+  type: 'National' | 'State' | 'Private' | 'New-age';
+  description?: string;
 }
 
 export interface Branch {
@@ -41,6 +54,8 @@ export interface Branch {
     cs?: number;
     logic?: number;
   };
+  subCareers?: SubCareer[];
+  exams?: Exam[];
 }
 
 export interface ScoredBranch {

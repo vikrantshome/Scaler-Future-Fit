@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AnalysisResult, UserResponses } from '../types';
 import { ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
 import { generateAIInsights } from '../services/geminiService';
-import { Download, Share2, Award, Zap, BookOpen, ArrowRight } from 'lucide-react';
+import { Download, Share2, Award, Zap, BookOpen, ArrowRight, Briefcase, Building2, GraduationCap } from 'lucide-react';
 
 interface ResultsViewProps {
   results: AnalysisResult;
@@ -20,7 +20,7 @@ const ResultsView: React.FC<ResultsViewProps> = ({ results, responses, onRestart
 
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4 md:px-8">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         
         {/* Header */}
         <div className="text-center mb-12">
@@ -29,21 +29,73 @@ const ResultsView: React.FC<ResultsViewProps> = ({ results, responses, onRestart
         </div>
 
         {/* Top Recommendations */}
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
+        <div className="grid lg:grid-cols-3 gap-8 mb-12">
             {results.topBranches.map((item, idx) => (
-                <div key={item.branch.id} className={`relative bg-white rounded-2xl shadow-lg border-2 p-6 flex flex-col ${idx === 0 ? 'border-scaler-blue ring-4 ring-blue-50' : 'border-transparent'}`}>
+                <div key={item.branch.id} className={`relative bg-white rounded-2xl shadow-lg border-2 flex flex-col ${idx === 0 ? 'border-scaler-blue ring-4 ring-blue-50' : 'border-transparent'}`}>
                     {idx === 0 && (
-                        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-scaler-blue text-white px-4 py-1 rounded-full text-sm font-bold shadow-md">
+                        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-scaler-blue text-white px-4 py-1 rounded-full text-sm font-bold shadow-md z-10">
                             Top Match
                         </div>
                     )}
-                    <div className="mb-4">
+                    
+                    <div className="p-6 pb-4">
                         <div className="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center text-scaler-blue font-bold text-xl mb-4">
                             #{idx + 1}
                         </div>
                         <h3 className="text-xl font-bold text-slate-900 leading-tight mb-2">{item.branch.name}</h3>
                         <p className="text-sm text-slate-500 mb-4">{item.branch.description}</p>
+                        
+                         <div className="flex items-center text-sm text-green-600 font-medium bg-green-50 px-3 py-1.5 rounded-lg w-fit">
+                            <Award className="w-4 h-4 mr-2" />
+                            Match Score: {Math.round(item.score)}/100
+                        </div>
                     </div>
+
+                    {/* Sub-Careers Section */}
+                    {item.branch.subCareers && item.branch.subCareers.length > 0 && (
+                        <div className="border-t border-slate-100 bg-slate-50/50 p-5 flex-1">
+                            <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 flex items-center">
+                                <Briefcase className="w-3 h-3 mr-1" /> Career Paths
+                            </h4>
+                            <ul className="space-y-3 mb-6">
+                                {item.branch.subCareers.slice(0, 3).map((career, cIdx) => (
+                                    <li key={cIdx} className="text-sm">
+                                        <div className="font-semibold text-slate-800">{career.name}</div>
+                                        <div className="text-xs text-slate-500 line-clamp-1" title={career.recruiters?.join(', ')}>
+                                            <span className="font-medium text-slate-400">Hiring:</span> {career.recruiters?.join(', ')}
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+
+                            {/* Target Exams Section */}
+                            {item.branch.exams && item.branch.exams.length > 0 && (
+                                <div className="mt-4">
+                                    <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 flex items-center">
+                                        <GraduationCap className="w-3 h-3 mr-1" /> Target Exams
+                                    </h4>
+                                    <div className="space-y-2">
+                                        {item.branch.exams.slice(0, 3).map((exam, eIdx) => (
+                                            <div key={eIdx} className="flex items-center justify-between text-sm bg-white p-2 rounded border border-slate-100">
+                                                <div className="flex flex-col">
+                                                    <span className="font-medium text-slate-700">{exam.name}</span>
+                                                    <span className="text-[10px] text-slate-400">{exam.description}</span>
+                                                </div>
+                                                <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
+                                                    exam.type === 'National' ? 'bg-purple-100 text-purple-700' :
+                                                    exam.type === 'New-age' ? 'bg-green-100 text-green-700' :
+                                                    exam.type === 'Private' ? 'bg-orange-100 text-orange-700' :
+                                                    'bg-blue-100 text-blue-700'
+                                                }`}>
+                                                    {exam.type}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
                     
                     <div className="mt-auto pt-4 border-t border-slate-100">
                         <div className="flex items-center text-sm text-green-600 font-medium mb-2">
@@ -97,7 +149,7 @@ const ResultsView: React.FC<ResultsViewProps> = ({ results, responses, onRestart
                         {aiText}
                     </p>
                     <div className="flex flex-wrap gap-4">
-                         {results.topBranches.some(b => b.branch.id === 'cse' || b.branch.id === 'ai_ds') && (
+                         {results.topBranches.some(b => ['cse', 'ai_ds', 'algo_trading', 'it'].includes(b.branch.id)) && (
                             <a href="https://www.scaler.com/school-of-technology/" target="_blank" rel="noreferrer" className="inline-flex items-center bg-white text-slate-900 px-4 py-2 rounded-lg font-bold text-sm hover:bg-blue-50 transition-colors">
                                 Explore Scaler School of Technology <ArrowRight className="w-4 h-4 ml-2" />
                             </a>

@@ -1,29 +1,40 @@
 import { UserInfo, UserResponses, AnalysisResult } from '../types';
 
-// NOTE: In a production environment, this connection string should reside on a secure backend server.
-// Browsers cannot directly connect to MongoDB via standard drivers for security reasons.
-// This service simulates the API call that would send data to your backend.
-const DB_CONNECTION_STRING = "mongodb+srv://ainaviksha_db_user:gHV1FANEjzVAsMBP@naviksha.kwnahck.mongodb.net/Scaler-future-fit?retryWrites=true&w=majority";
+const API_URL = '/api';
 
 export const saveStudentData = async (
   userInfo: UserInfo, 
   responses: UserResponses, 
   results: AnalysisResult
 ): Promise<boolean> => {
-  console.log("------------------------------------------------");
-  console.log(`🔌 Connecting to MongoDB: ${DB_CONNECTION_STRING}`);
-  console.log("📝 Saving Student Record:", {
-    profile: userInfo,
-    test_data: responses,
-    analysis_results: results,
-    timestamp: new Date().toISOString()
-  });
-  console.log("------------------------------------------------");
+  try {
+    console.log("------------------------------------------------");
+    console.log(`🔌 Sending data to backend: ${API_URL}/save-student`);
+    
+    const response = await fetch(`${API_URL}/save-student`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userInfo,
+        responses,
+        results
+      }),
+    });
 
-  // Simulate network latency for a realistic effect
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true);
-    }, 1500);
-  });
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log("✅ Data saved successfully:", data);
+    return true;
+
+  } catch (error) {
+    console.error("❌ Failed to save student data:", error);
+    // In a real app, you might want to show a toast notification here
+    // For now, we return false but allowing the UI to proceed or retry could be better
+    return false;
+  }
 };

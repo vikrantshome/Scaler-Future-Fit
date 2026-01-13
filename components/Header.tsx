@@ -6,15 +6,10 @@ const Header = () => {
       {/* Left: Scaler School of Technology Logo */}
       <div className="flex items-center gap-3">
          <img 
-            src="https://assets.scaler.com/assets/scaler/svg/scaler-logo-new-15c5521978.svg" 
-            alt="Scaler Logo" 
-            className="h-6 md:h-8"
+            src="/sst-logo.png" 
+            alt="Scaler School of Technology Logo" 
+            className="h-8 md:h-10 w-auto"
          />
-         <div className="h-8 w-px bg-slate-300 mx-1"></div>
-         <div className="flex flex-col justify-center">
-            <span className="text-[10px] md:text-xs font-bold text-slate-900 leading-none tracking-wide uppercase">School of</span>
-            <span className="text-[10px] md:text-xs font-bold text-slate-900 leading-none tracking-wide uppercase text-scaler-blue">Technology</span>
-         </div>
       </div>
 
       {/* Right: Naviksha AI Badge */}
