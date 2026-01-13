@@ -11,6 +11,12 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+// Request Logger
+app.use((req, res, next) => {
+  console.log(`📨 ${req.method} request to ${req.url}`);
+  next();
+});
+
 // Database Connection
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('✅ MongoDB Connected to Scaler-future-fit'))
