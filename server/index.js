@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
   res.send('Scaler Future Fit API is running');
 });
 
-const saveStudentHandler = async (req, res) => {
+app.post('/api/save-student', async (req, res) => {
   try {
     const { userInfo, responses, results } = req.body;
 
@@ -55,10 +55,7 @@ const saveStudentHandler = async (req, res) => {
     console.error('Save Error:', error);
     res.status(500).json({ success: false, message: 'Server error saving data' });
   }
-};
-
-app.post('/api/save-student', saveStudentHandler);
-app.post('/save-student', saveStudentHandler);
+});
 
 // Start Server
 if (require.main === module) {
