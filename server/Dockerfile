@@ -4,14 +4,15 @@ WORKDIR /app
 
 COPY package*.json ./
 
+# Install production dependencies
 RUN npm install --production
 
 COPY . .
 
-# Cloud Run expects the container to listen on port 8080 by default, 
-# or the port specified by the PORT env var.
-# We'll use the environment variable which usually defaults to 8080 on Cloud Run.
+# Set environment variables
+ENV NODE_ENV=production
 ENV PORT=8080
+
 EXPOSE 8080
 
 CMD ["node", "index.js"]

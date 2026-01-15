@@ -4,19 +4,13 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const fs = require('fs').promises;
 const path = require('path');
+
+console.log(`Environment: ${process.env.NODE_ENV}`);
+
 const puppeteer = process.env.NODE_ENV === 'production' ? require('puppeteer-core') : require('puppeteer');
 const chromium = require('@sparticuz/chromium');
 const { PDFDocument } = require('pdf-lib');
 const StudentProfile = require('./models/StudentProfile');
-
-// Try to import Google Drive uploader, but don't crash if missing
-let uploadToDrive = null;
-try {
-    const driveUtils = require('./utils/googleDrive');
-    uploadToDrive = driveUtils.uploadToDrive;
-} catch (e) {
-    console.warn('⚠️ Google Drive Utils not found or failed to load. Drive upload will be disabled.');
-}
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -578,38 +572,53 @@ app.post('/api/generate-report', async (req, res) => {
         const mergedPdfBytes = await mergedPdf.save();
         const buffer = Buffer.from(mergedPdfBytes);
 
-        // Upload or Return
-        let publicUrl = null;
-        if (uploadToDrive && reportData._id) {
-             try {
-                const date = new Date().toISOString().slice(0, 10);
-                const safeName = (reportData.personalInfo?.fullName || 'Student').replace(/[^a-zA-Z0-9]/g, '_');
-                const filename = `FutureFit_${safeName}_${reportData._id}_${date}.pdf`;
-                publicUrl = await uploadToDrive(buffer, filename, reportData._id.toString());
-             } catch (e) {
-                 console.error('Drive upload failed:', e.message);
-             }
-        }
+        // Force offline download
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename=report.pdf`);
+        res.send(buffer);
 
-        // Return Link if available, else stream the file? 
-        // User requested "download link", so if Drive fails, we might want to return base64 or just fail safely.
-        // For this implementation, I'll return the link if available, OR a success flag saying "Generated".
-        // Actually, if Drive fails, I'll send the PDF as a downloadable stream if the client supports it, 
-        // but the standard response format is JSON with a link.
-        
-        if (!publicUrl) {
-            res.status(200).send({ success: true, reportLink: publicUrl });
-        } else {
-            // Fallback: Send PDF directly
-            res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', `attachment; filename=report.pdf`);
-            res.send(buffer);
-        }
 
     } catch (error) {
         console.error('PDF Gen Error:', error);
         res.status(500).send({ error: 'Generation Failed', details: error.message });
     }
+});
+
+// Login Endpoint
+app.post('/api/login', async (req, res) => {
+  try {
+    const { phone } = req.body;
+    if (!phone) return res.status(400).json({ error: 'Phone number is required' });
+
+    // Find latest profile for this phone number
+    const student = await StudentProfile.findOne({ 'personalInfo.phone': phone })
+      .sort({ submittedAt: -1 });
+
+    if (!student) {
+      return res.status(404).json({ error: 'No record found for this mobile number.' });
+    }
+
+    res.json({
+      success: true,
+      student: {
+        id: student._id,
+        userInfo: student.personalInfo,
+        responses: {
+            raisec: student.assessment.raisec,
+            academic: student.assessment.academic
+        },
+        results: {
+            topBranches: student.results.topBranches,
+            raisecProfile: student.results.raisecProfile,
+            dominantType: student.results.dominantType,
+            aiInsight: student.results.aiInsight
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Login Error:', error);
+    res.status(500).json({ error: 'Server error during login' });
+  }
 });
 
 // Start
