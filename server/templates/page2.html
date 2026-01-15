@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>RIASEC Profile – Future Fit</title>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Font similar to design -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      .line-clamp-5 {
+          display: -webkit-box;
+          -webkit-line-clamp: 5;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+      }
+      :root {
+        --blue-primary: #0f6fb2;
+        --bg-blue: #f3f9ff;
+      }
+      body {
+        font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial;
+        background: linear-gradient(180deg, #f7fbff 0%, #f3f9ff 100%);
+      }
+      /* subtle card shadow used on design */
+      .soft-card {
+        box-shadow: 0 10px 30px rgba(15, 111, 178, 0.06);
+        border-radius: 28px;
+        background: #ffffff;
+      }
+      .pill-title {
+        background: linear-gradient(180deg, #0b63a6, #0d72bf);
+        color: white;
+        padding: 12px 36px;
+        border-radius: 999px;
+        display: inline-block;
+        font-weight: 700;
+        font-size: 1.25rem;
+      }
+      /* progress bar container */
+      .bar-track {
+        background: #f1f5f9;
+        height: 30px;
+        border-radius: 6px;
+        position: relative;
+        overflow: hidden;
+      }
+      .bar-fill {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+      }
+      /* colored fills (matching image) */
+      .c-real {
+        background: #f6a623;
+      }
+      .c-invest {
+        background: #ff3b89;
+      }
+      .c-art {
+        background: #4b4fd6;
+      }
+      .c-social {
+        background: #00bcd4;
+      }
+      .c-enter {
+        background: #93cf2e;
+      }
+      .c-conv {
+        background: #1e73b8;
+      }
+
+      /* small powered badge */
+      .powered-badge {
+        background: white;
+        padding: 8px 12px;
+        border-radius: 999px;
+        box-shadow: 0 6px 18px rgba(13, 72, 112, 0.08);
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .powered-dot {
+        width: 34px;
+        height: 34px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #9f7dfb, #f6b3ff);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 0.9rem;
+      }
+
+      /* responsive tweaks */
+      @media (min-width: 1024px) {
+        .container-lg {
+          max-width: 960px;
+          margin: 48px auto;
+        }
+      }
+      @media (max-width: 768px) {
+        .pill-title {
+          padding: 10px 22px;
+          font-size: 1rem;
+        }
+        .bar-track {
+          height: 26px;
+        }
+      }
+    </style>
+  </head>
+  <body class="antialiased w-[210mm] h-[297mm]">
+    <main class="container-lg mx-auto px-6 py-8">
+      <!-- Top rounded card: Profile Summary -->
+      <section class="soft-card p-6 lg:p-6 mb-4">
+        <div class="text-center">
+          <span class="pill-title font-bold text-3xl rounded-2xl px-16"
+            >Your Future Fit Profile</span
+          >
+        </div>
+
+        <div
+          class="mt-4 text-center text-gray-800 max-w-3xl mx-auto leading-tight text-sm"
+        >
+          <p>
+            {{SUMMARY_PARAGRAPH}}
+          </p>
+        </div>
+      </section>
+
+      <!-- Main card: Personality Overview -->
+      <section class="soft-card p-6 lg:p-6 mb-4">
+        <div class="text-center">
+          <h2 class="text-3xl lg:text-3xl font-extrabold text-[#0b63a6]">
+            Your Personality Overview
+          </h2>
+          <p class="mt-2 text-gray-600 italic">
+            Based on the RIASEC framework, contextualized for India by Naviksha AI
+          </p>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="mt-4 max-w-lg mx-auto bg-white p-6 rounded-2xl border border-slate-100 flex flex-col items-center">
+             <h3 class="font-bold text-slate-700 mb-4">Your Personality Profile</h3>
+             <div class="relative" style="height: 300px; width: 400px;">
+                <canvas id="raisecChart"></canvas>
+             </div>
+             <div class="mt-4 text-center">
+                <span class="text-sm font-semibold text-slate-500">Dominant Trait: </span>
+                <span class="text-sm font-bold text-[#0b63a6]">{{DOMINANT_TRAIT}}</span>
+            </div>
+            <!-- DEBUG DATA DISPLAY -->
+            <div id="debug-data" class="text-[10px] text-red-500 mt-2 font-mono text-center"></div>
+        </div>
+        
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                try {
+                    const dataValues = {{RAISEC_SCORES_ARRAY}};
+                    
+                    const ctx = document.getElementById('raisecChart');
+                    if (!ctx) {
+                        console.error('DEBUG: Canvas element not found!');
+                        return;
+                    }
+
+                    new Chart(ctx, {
+                        type: 'radar',
+                        data: {
+                            labels: ['Realistic', 'Investigative', 'Artistic', 'Social', 'Enterprising', 'Conventional'],
+                            datasets: [{
+                                label: 'Profile',
+                                data: dataValues,
+                                fill: true,
+                                backgroundColor: 'rgba(45, 91, 255, 0.4)',
+                                borderColor: '#2d5bff',
+                                pointBackgroundColor: '#2d5bff',
+                                pointBorderColor: '#fff',
+                                pointHoverBackgroundColor: '#fff',
+                                pointHoverBorderColor: '#2d5bff'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                r: {
+                                    angleLines: { color: '#e2e8f0' },
+                                    grid: { color: '#e2e8f0' },
+                                    pointLabels: {
+                                        font: { size: 11, family: "'Inter', sans-serif" },
+                                        color: '#64748b'
+                                    },
+                                    ticks: { display: false, maxTicksLimit: 5 },
+                                    suggestedMin: 0,
+                                    suggestedMax: 10
+                                }
+                            },
+                            plugins: { legend: { display: false } },
+                            animation: false
+                        }
+                    });
+                    console.log('DEBUG: Chart initialized successfully');
+                } catch (e) {
+                    console.error('DEBUG: Chart initialization error:', e);
+                }
+            });
+        </script>
+
+        <!-- Insights box -->
+        <div class="mt-4">
+          <div class="bg-[#f3fbff] border border-[#e1f0fb] rounded-xl p-6">
+            <h3 class="text-xl text-[#0b63a6] font-semibold text-center">
+              Insights
+            </h3>
+            <p
+              class="mt-2 text-gray-800 text-xs leading-tight max-w-3xl mx-auto text-center"
+              id="riasec-insight-paragraph"
+            >
+              <!-- RIASEC Insight will be dynamically inserted here -->
+              {{RIASEC_INSIGHT}}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer: Allen logo + Powered badge -->
+       <div class="absolute bottom-0 left-0 w-full px-10 pb-4 flex justify-between items-center">
+            <img src="{{PARTNER_LOGO}}" alt="Partner Logo" class="{{LOGO_CLASS}}">
+            
+            <img src="./assets/footer_logo_2.png" alt="Powered by Naviksha AI" class="h-[34px] w-auto shadow-sm rounded-full">
+        </div>
+    </main>
+  </body>
+</html>

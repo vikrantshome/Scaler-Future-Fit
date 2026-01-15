@@ -22,6 +22,18 @@ export const generateAIInsights = async (
     const topBranchNames = results.topBranches.map(b => b.branch.name).join(", ");
     const dominantTrait = results.dominantType;
     
+    // Sort and format full profile
+    const sortedProfile = [...results.raisecProfile].sort((a, b) => b.score - a.score);
+    const fullRaisecProfile = sortedProfile.map(p => `${p.type}: ${p.score}`).join(", ");
+
+    // Extract top traits (Top 2 or all ties)
+    const topScore = sortedProfile[0]?.score || 0;
+    // Get all traits that are either the top score or the second highest score (including ties)
+    const topTraits = sortedProfile.filter((p, i) => 
+        p.score === topScore || (i === 1) || (i > 1 && p.score === sortedProfile[1]?.score)
+    );
+    const topTraitsString = topTraits.map(p => `${p.type} (${p.score})`).join(", ");
+    
     // Detailed context about Scaler School of Technology to inform the AI
     const scalerContext = `
     Context about Scaler School of Technology (SST):
@@ -40,7 +52,8 @@ export const generateAIInsights = async (
       ${scalerContext}
 
       Student Profile:
-      - Dominant Personality Trait: ${dominantTrait} (RAISEC model)
+      - Top Personality Traits: ${topTraitsString} (Primary focus: Consider all these traits equally if scores are tied or very close)
+      - Full RAISEC Profile: ${fullRaisecProfile}
       - Favorite Subject: ${responses.academic.favoriteSubject}
       - Exam Prep: ${responses.academic.examPrep}
       - Career Goal: ${responses.academic.engineeringGoal}
@@ -48,12 +61,12 @@ export const generateAIInsights = async (
       Calculated Top 3 Branches: ${topBranchNames}
       
       Task:
-      Write a personalized, encouraging paragraph (max 150 words).
-      1. Explain briefly why these branches fit their personality/academic profile.
-      2. If their top branch is Computer Science or AI/DS, explicitly recommend "Scaler School of Technology" as the best place to pursue this. Connect their profile (e.g., if they like practical learning or building things) to SST's "Learn by doing" and "1-year internship" approach.
-      3. If their top branch is NOT CS (e.g., Mechanical), suggest they can still leverage tech skills in their field, but focus on their core strength.
+      Write a personalized, encouraging paragraph (max 170 words).
+      1. Explain briefly why these branches fit their personality (especially their top traits) and academic profile.
+      2. If their top branch is Computer Science or AI/DS AND they prefer practical learning/building things: Highlight "New-Age Tech Schools (like Scaler School of Technology)" as a high-potential alternative to traditional IITs, specifically for their industry-aligned curriculum and internships.
+      3. Provide a balanced perspective: Briefly contrast the value of Government colleges (Legacy, Research) vs. New-Age schools (Modern Skills, Hands-on) to help them make an informed choice based on their learning style.
       
-      Tone: Professional, inspiring, and tailored to an ambitious Indian student.
+      Tone: Professional, unbiased, empowering, and tailored to an ambitious Indian student. Avoid sounding like a direct advertisement; sound like a trusted mentor.
     `;
 
     try {

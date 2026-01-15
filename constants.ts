@@ -109,7 +109,33 @@ export const ENGINEERING_BRANCHES: Branch[] = [
       { name: 'MHT-CET / KCET', type: 'State', description: 'Top state colleges' },
       { name: 'VITEEE / SRMJEEE', type: 'Private', description: 'Large CSE intake' },
       { name: 'IIIT-H UGEE', type: 'New-age', description: 'Research-oriented' }
-    ]
+    ],
+    salary: {
+      entry: '4-8 LPA',
+      midLevel: '15-30+ LPA'
+    },
+    topColleges: [
+      'Scaler School of Technology', 'IIT Bombay', 'IIT Delhi', 'IIT Madras', 'IIT Kanpur', 
+      'IIT Kharagpur', 'BITS Pilani', 'NIT Warangal', 'NIT Trichy'
+    ],
+    focusAreas: {
+      subjects: ['Physics', 'Chemistry', 'Mathematics'],
+      topics: [
+        'Mathematics: Algebra, Calculus, Coordinate Geometry',
+        'Physics: Mechanics, Electrodynamics',
+        'Chemistry: Physical, Organic, Inorganic'
+      ]
+    },
+    typicalRoles: {
+      roles: ['Software Engineer', 'Web Developer', 'Data Analyst', 'DevOps Engineer'],
+      companies: ['Google', 'Microsoft', 'Amazon', 'TCS', 'Infosys', 'Flipkart']
+    },
+    futureTrends: [
+      'Rise of AI/ML specialists & Data Scientists',
+      'Growth in Cloud & Edge Computing',
+      'Focus on Cybersecurity & Ethical AI'
+    ],
+    workEnvironment: 'Primarily office-based or remote; involves coding, design, and team collaboration.'
   },
   {
     id: 'ai_ds',
@@ -126,7 +152,33 @@ export const ENGINEERING_BRANCHES: Branch[] = [
       { name: 'Scaler NSET', type: 'New-age', description: 'Specialized AI curriculum' },
       { name: 'BITSAT', type: 'Private', description: 'Math/Computing programs' },
       { name: 'IIIT-H UGEE', type: 'New-age', description: 'Research in AI/ML' }
-    ]
+    ],
+    salary: {
+      entry: '5-10 LPA',
+      midLevel: '18-40+ LPA'
+    },
+    topColleges: [
+      'IIT Delhi', 'IIT Bombay', 'IISc Bangalore', 
+      'IIT Madras', 'BITS Pilani', 'IIIT Hyderabad'
+    ],
+    focusAreas: {
+      subjects: ['Physics', 'Chemistry', 'Mathematics'],
+      topics: [
+        'Math: Probability, Statistics, Calculus, Linear Algebra',
+        'Physics: Analytical skills',
+        'Logical Reasoning & Data Interpretation'
+      ]
+    },
+    typicalRoles: {
+      roles: ['Data Scientist', 'ML Engineer', 'AI Engineer', 'Big Data Engineer'],
+      companies: ['Google', 'Microsoft', 'Amazon', 'IBM', 'Fractal Analytics', 'Mu Sigma']
+    },
+    futureTrends: [
+      'Pervasive AI integration across industries',
+      'Generative AI & Responsible AI advancements',
+      'Real-time data processing & ethics'
+    ],
+    workEnvironment: 'Office-based/Remote; involves data analysis, model building, and research.'
   },
   {
     id: 'it',
@@ -144,7 +196,33 @@ export const ENGINEERING_BRANCHES: Branch[] = [
       { name: 'MHT-CET / KCET', type: 'State', description: 'Regional IT hubs' },
       { name: 'Scaler NSET', type: 'New-age', description: 'Outcome-first IT careers' },
       { name: 'VITEEE / SRMJEEE', type: 'Private', description: 'IT placements' }
-    ]
+    ],
+    salary: {
+      entry: '3.5-7 LPA',
+      midLevel: '12-25+ LPA'
+    },
+    topColleges: [
+      'NITs (Trichy, Warangal, Surathkal)', 'IIITs (Allahabad, Bangalore)', 
+      'BITS Pilani', 'VIT Vellore', 'DTU'
+    ],
+    focusAreas: {
+      subjects: ['Physics', 'Chemistry', 'Mathematics'],
+      topics: [
+        'Math: Problem-solving, Logic',
+        'Physics: Basic principles',
+        'General scientific aptitude'
+      ]
+    },
+    typicalRoles: {
+      roles: ['System Admin', 'Network Engineer', 'IT Consultant', 'Database Admin'],
+      companies: ['TCS', 'Infosys', 'Wipro', 'HCL', 'Accenture', 'Cisco']
+    },
+    futureTrends: [
+      'Cloud services expansion',
+      'Demand for DevOps & Cybersecurity',
+      'AI in IT Operations (AIOps)'
+    ],
+    workEnvironment: 'Office/Remote; managing infrastructure, support, and implementing solutions.'
   },
   {
     id: 'ece',
@@ -163,7 +241,32 @@ export const ENGINEERING_BRANCHES: Branch[] = [
       { name: 'MHT-CET / KCET', type: 'State', description: 'Regional electronics' },
       { name: 'IIIT-H UGEE', type: 'New-age', description: 'Signal processing/Research' },
       { name: 'VITEEE', type: 'Private', description: 'Good ECE placement' }
-    ]
+    ],
+    salary: {
+      entry: '4-7 LPA',
+      midLevel: '12-25+ LPA'
+    },
+    topColleges: [
+      'IIT Bombay', 'IIT Delhi', 'IIT Madras', 'BITS Pilani', 
+      'NIT Trichy', 'IISc Bangalore'
+    ],
+    focusAreas: {
+      subjects: ['Physics', 'Chemistry', 'Mathematics'],
+      topics: [
+        'Physics: Electrodynamics, Semiconductors, Modern Physics',
+        'Math: Calculus, Differential Equations, Complex Numbers'
+      ]
+    },
+    typicalRoles: {
+      roles: ['VLSI Engineer', 'Embedded Systems Eng', 'Telecom Engineer', 'IoT Specialist'],
+      companies: ['Intel', 'Qualcomm', 'Samsung', 'NVIDIA', 'Cisco', 'Jio']
+    },
+    futureTrends: [
+      '5G/6G & IoT expansion',
+      'Semiconductor boom & AI Hardware',
+      'Autonomous systems & Robotics'
+    ],
+    workEnvironment: 'Mix of Office (Design) and Lab (Testing, Prototyping).'
   },
   {
     id: 'mech',
@@ -181,7 +284,32 @@ export const ENGINEERING_BRANCHES: Branch[] = [
       { name: 'MHT-CET', type: 'State', description: 'Pune manufacturing hub' },
       { name: 'BITSAT', type: 'Private', description: 'Strong core placements' },
       { name: 'COMEDK UGET', type: 'State', description: 'Karnataka mech colleges' }
-    ]
+    ],
+    salary: {
+      entry: '3.5-6 LPA',
+      midLevel: '10-20+ LPA'
+    },
+    topColleges: [
+      'IIT Bombay', 'IIT Madras', 'IIT Delhi', 'BITS Pilani', 
+      'NIT Warangal', 'VIT Vellore'
+    ],
+    focusAreas: {
+      subjects: ['Physics', 'Mathematics', 'Chemistry'],
+      topics: [
+        'Physics: Mechanics, Thermodynamics, Fluids',
+        'Math: Calculus, Vectors, 3D Geometry'
+      ]
+    },
+    typicalRoles: {
+      roles: ['Design Engineer', 'Automotive Engineer', 'Production Engineer', 'Robotics Eng'],
+      companies: ['Tata Motors', 'Mahindra', 'L&T', 'Maruti Suzuki', 'Siemens', 'ISRO']
+    },
+    futureTrends: [
+      'Industry 4.0 & AI in Manufacturing',
+      'EVs & Sustainable Energy Systems',
+      'Robotics & Automation'
+    ],
+    workEnvironment: 'Mix of Office (CAD Design), Factory (Production), and Lab (Testing).'
   },
   {
     id: 'electrical',
@@ -198,7 +326,32 @@ export const ENGINEERING_BRANCHES: Branch[] = [
       { name: 'MHT-CET / KCET', type: 'State', description: 'Regional power boards' },
       { name: 'BITSAT', type: 'Private', description: 'Electrical & Instrumentation' },
       { name: 'Scaler NSET', type: 'New-age', description: 'For software transitions' }
-    ]
+    ],
+    salary: {
+      entry: '4-7 LPA',
+      midLevel: '12-25+ LPA'
+    },
+    topColleges: [
+      'IIT Bombay', 'IIT Delhi', 'IIT Kanpur', 'IIT Madras', 
+      'BITS Pilani', 'NIT Trichy'
+    ],
+    focusAreas: {
+      subjects: ['Physics', 'Mathematics', 'Chemistry'],
+      topics: [
+        'Physics: Electrodynamics, Magnetism, AC Circuits',
+        'Math: Calculus, Differential Equations'
+      ]
+    },
+    typicalRoles: {
+      roles: ['Power Systems Eng', 'Control Engineer', 'Renewable Energy Eng'],
+      companies: ['Siemens', 'ABB', 'PowerGrid', 'NTPC', 'Tata Power', 'Reliance']
+    },
+    futureTrends: [
+      'Smart Grids & Energy Storage',
+      'Electric Vehicles (EVs)',
+      'Green Energy Integration'
+    ],
+    workEnvironment: 'Office (Design), Power Plants/Substations (Ops), Field (Installation).'
   },
   {
     id: 'civil',
@@ -215,7 +368,33 @@ export const ENGINEERING_BRANCHES: Branch[] = [
       { name: 'MHT-CET', type: 'State', description: 'Civil strong in Pune/Nashik' },
       { name: 'BITSAT', type: 'Private', description: 'Civil seats at BITS' },
       { name: 'COMEDK UGET', type: 'State', description: 'Private civil pool' }
-    ]
+    ],
+    salary: {
+      entry: '3-6 LPA',
+      midLevel: '10-20+ LPA'
+    },
+    topColleges: [
+      'IIT Bombay', 'IIT Roorkee', 'IIT Madras', 'NIT Warangal', 
+      'BITS Pilani', 'COEP Pune'
+    ],
+    focusAreas: {
+      subjects: ['Physics', 'Mathematics', 'Chemistry'],
+      topics: [
+        'Physics: Mechanics, Properties of Matter',
+        'Math: Calculus, Vectors, Geometry',
+        'Chemistry: Material Science'
+      ]
+    },
+    typicalRoles: {
+      roles: ['Structural Engineer', 'Project Manager', 'Urban Planner', 'Transport Eng'],
+      companies: ['L&T', 'Tata Projects', 'DLF', 'NHAI', 'Godrej Properties']
+    },
+    futureTrends: [
+      'Smart Cities & Green Buildings',
+      'Sustainable Infrastructure',
+      'AI in Construction Management'
+    ],
+    workEnvironment: 'Office (Planning/Design), Construction Sites (Execution), Field Surveys.'
   },
   {
     id: 'chem',
@@ -232,7 +411,32 @@ export const ENGINEERING_BRANCHES: Branch[] = [
       { name: 'MHT-CET / WBJEE', type: 'State', description: 'Regional chemical hubs' },
       { name: 'BITSAT', type: 'Private', description: 'Process engineering' },
       { name: 'IIIT-H UGEE', type: 'New-age', description: 'Comp Chemistry/Data' }
-    ]
+    ],
+    salary: {
+      entry: '4-7 LPA',
+      midLevel: '12-25+ LPA'
+    },
+    topColleges: [
+      'IIT Bombay', 'IIT Delhi', 'ICT Mumbai', 'IIT Kanpur', 
+      'BITS Pilani', 'NIT Warangal'
+    ],
+    focusAreas: {
+      subjects: ['Chemistry', 'Physics', 'Mathematics'],
+      topics: [
+        'Chemistry: Physical, Organic, Inorganic',
+        'Physics: Thermodynamics, Fluids'
+      ]
+    },
+    typicalRoles: {
+      roles: ['Process Engineer', 'R&D Scientist', 'Production Engineer'],
+      companies: ['Reliance Industries', 'IOCL', 'ONGC', 'HUL', 'Asian Paints']
+    },
+    futureTrends: [
+      'Green Chemistry & Sustainability',
+      'Bio-fuels & Renewable Materials',
+      'Process Automation'
+    ],
+    workEnvironment: 'Lab (R&D), Plant/Refinery (Operations), Office (Design).'
   },
   {
     id: 'aerospace',
@@ -249,7 +453,32 @@ export const ENGINEERING_BRANCHES: Branch[] = [
       { name: 'BITSAT', type: 'Private', description: 'Aerospace seats' },
       { name: 'IIIT-H UGEE', type: 'New-age', description: 'Avionics/Control' },
       { name: 'Scaler NSET', type: 'New-age', description: 'Avionics software' }
-    ]
+    ],
+    salary: {
+      entry: '5-9 LPA',
+      midLevel: '15-35+ LPA'
+    },
+    topColleges: [
+      'IIT Bombay', 'IIT Kanpur', 'IIT Madras', 'IIST Thiruvananthapuram', 
+      'IISc Bangalore'
+    ],
+    focusAreas: {
+      subjects: ['Physics', 'Mathematics'],
+      topics: [
+        'Physics: Mechanics, Fluids, Thermodynamics',
+        'Math: Calculus, Vectors, Geometry'
+      ]
+    },
+    typicalRoles: {
+      roles: ['Aerodynamicist', 'Avionics Engineer', 'Propulsion Engineer'],
+      companies: ['ISRO', 'DRDO', 'HAL', 'Boeing', 'Airbus', 'Tata Advanced Systems']
+    },
+    futureTrends: [
+      'Commercial Space Travel',
+      'Sustainable Aviation Fuel',
+      'Drone Technology & UAVs'
+    ],
+    workEnvironment: 'Office (Design), Lab (Testing), Hangar/Field (Assembly/Ops).'
   },
   {
     id: 'biotech',
@@ -266,7 +495,33 @@ export const ENGINEERING_BRANCHES: Branch[] = [
       { name: 'BITSAT', type: 'Private', description: 'MSc Bio / BE Biotech' },
       { name: 'IIIT-H UGEE', type: 'New-age', description: 'Computational Bio' },
       { name: 'WBJEE / MHT-CET', type: 'State', description: 'State biotech' }
-    ]
+    ],
+    salary: {
+      entry: '3-6 LPA',
+      midLevel: '10-20+ LPA'
+    },
+    topColleges: [
+      'IIT Delhi', 'IIT Madras', 'IIT Bombay', 'BITS Pilani', 
+      'VIT Vellore', 'ICT Mumbai'
+    ],
+    focusAreas: {
+      subjects: ['Biology', 'Chemistry', 'Math/Physics'],
+      topics: [
+        'Biology: Genetics, Molecular Bio',
+        'Chemistry: Organic, Biochemistry',
+        'Math: Statistics'
+      ]
+    },
+    typicalRoles: {
+      roles: ['Research Scientist', 'Bioprocess Engineer', 'Bioinformatics Analyst'],
+      companies: ['Biocon', 'Serum Institute', 'Dr. Reddy\'s', 'Syngene', 'Novozymes']
+    },
+    futureTrends: [
+      'Personalized Medicine (Genomics)',
+      'Synthetic Biology',
+      'Bio-fuels & Sustainable Ag'
+    ],
+    workEnvironment: 'Lab (Research), Production Plant, Office (Data Analysis).'
   },
   {
     id: 'production',
@@ -283,23 +538,31 @@ export const ENGINEERING_BRANCHES: Branch[] = [
       { name: 'MHT-CET', type: 'State', description: 'Manufacturing hubs' },
       { name: 'BITSAT', type: 'Private', description: 'Manufacturing Engg' },
       { name: 'COMEDK', type: 'State', description: 'Private colleges' }
-    ]
-  },
-   {
-    id: 'algo_trading',
-    name: 'Algorithmic Trading & FinTech',
-    description: 'Where finance meets high-speed coding. For math wizards who want to build automated trading systems.',
-    weights: { I: 0.9, E: 0.9, C: 0.8, math: 1.0, logic: 1.0, cs: 0.7 },
-    subCareers: [
-       { name: 'Quant Researcher', description: 'Math models for markets.', recruiters: ['Tower Research', 'Jane Street'] },
-       { name: 'HFT Developer', description: 'Low-latency trading code.', recruiters: ['Optiver', 'Graviton'] },
-       { name: 'FinTech Engineer', description: 'Payment & banking apps.', recruiters: ['Razorpay', 'PhonePe', 'Zerodha'] }
     ],
-    exams: [
-      { name: 'JEE Advanced', type: 'National', description: 'IIT Math & Computing' },
-      { name: 'Scaler NSET', type: 'New-age', description: 'Direct FinTech/Algo pathway' },
-      { name: 'BITSAT', type: 'Private', description: 'MSc Math + CS' },
-      { name: 'ISI Admission', type: 'National', description: 'Statistical Institutes' }
-    ]
+    salary: {
+      entry: '3.5-6.5 LPA',
+      midLevel: '10-22+ LPA'
+    },
+    topColleges: [
+      'IIT Delhi', 'IIT Kharagpur', 'NIT Trichy', 
+      'BITS Pilani', 'VIT Vellore'
+    ],
+    focusAreas: {
+      subjects: ['Mathematics', 'Physics'],
+      topics: [
+        'Math: Statistics, Optimization, Calculus',
+        'Physics: Mechanics, Thermodynamics'
+      ]
+    },
+    typicalRoles: {
+      roles: ['Operations Manager', 'Supply Chain Analyst', 'Quality Engineer'],
+      companies: ['ITC', 'HUL', 'Tata Motors', 'Amazon', 'Flipkart', 'L&T']
+    },
+    futureTrends: [
+      'Industry 4.0 & Smart Factories',
+      'Supply Chain Resilience',
+      'Data-Driven Operations'
+    ],
+    workEnvironment: 'Factory (Floor mgmt), Warehouse, Office (Planning).'
   }
 ];

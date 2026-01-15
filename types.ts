@@ -56,6 +56,21 @@ export interface Branch {
   };
   subCareers?: SubCareer[];
   exams?: Exam[];
+  salary?: {
+    entry: string;
+    midLevel: string;
+  };
+  topColleges?: string[];
+  focusAreas?: {
+    subjects: string[];
+    topics: string[];
+  };
+  typicalRoles?: {
+    roles: string[];
+    companies: string[];
+  };
+  futureTrends?: string[];
+  workEnvironment?: string;
 }
 
 export interface ScoredBranch {

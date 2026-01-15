@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 
 const StudentProfileSchema = new mongoose.Schema({
   personalInfo: {
-    fullName: { type: String, required: true },
-    email: { type: String, required: true },
-    phone: { type: String, required: true },
-    grade: { type: String, required: true },
+    fullName: { type: String, required: false },
+    email: { type: String, required: false },
+    phone: { type: String, required: false },
+    grade: { type: String, required: false },
     schoolName: { type: String }, // Added per recent updates
-    city: { type: String, required: true }
+    city: { type: String, required: false }
   },
   assessment: {
     raisec: { type: Map, of: Number }, // Stores questionId -> score
@@ -24,8 +24,32 @@ const StudentProfileSchema = new mongoose.Schema({
       branch: {
         id: String,
         name: String,
-        description: String
-        // We actully only need identifiers usually, but storing full snapshot is safer for prototypes
+        description: String,
+        subCareers: [{
+            name: String,
+            recruiters: [String]
+        }],
+        exams: [{
+            name: String,
+            type: { type: String },
+            description: String
+        }],
+        salary: {
+            entry: String,
+            midLevel: String
+        },
+        topColleges: [String],
+        focusAreas: {
+            subjects: [String],
+            topics: [String]
+        },
+        typicalRoles: {
+            roles: [String],
+            companies: [String]
+        },
+        futureTrends: [String],
+        workEnvironment: String,
+        weights: { type: Map, of: Number }
       },
       score: Number,
       matchReason: String

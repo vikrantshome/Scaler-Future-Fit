@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>College Selection Guide</title>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        font-family: "Inter", system-ui, -apple-system, sans-serif;
+        background: #f8fafc;
+      }
+      .card-shadow {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+    </style>
+  </head>
+  <body class="w-[210mm] h-[297mm] p-0 m-0">
+    <div class="w-full h-full bg-slate-50 relative flex flex-col">
+      
+      <!-- Header -->
+      <header class="bg-[#0b63a6] text-white p-8 pb-12 rounded-b-[3rem]">
+        <div class="text-center">
+          <h1 class="text-3xl font-bold mb-2">Choosing the Right College</h1>
+          <p class="text-blue-100 text-sm max-w-2xl mx-auto">
+            Your college environment shapes your career. Here is a guide to help you decide which type of institute fits your goals best.
+          </p>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="flex-1 px-10 -mt-8">
+        
+        <div class="grid grid-cols-1 gap-6">
+          
+          <!-- 1. Government Colleges -->
+          <div class="bg-white rounded-2xl p-6 card-shadow border-l-8 border-purple-600">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <h2 class="text-xl font-bold text-slate-800">Government (IITs, NITs)</h2>
+                <p class="text-xs text-slate-500 font-medium uppercase tracking-wide">The Traditional Prestige</p>
+              </div>
+              <span class="bg-purple-100 text-purple-700 text-[10px] font-bold px-2 py-1 rounded">Research & Core</span>
+            </div>
+            <div class="grid grid-cols-2 gap-4 text-sm text-slate-600">
+              <ul class="list-disc pl-4 space-y-1">
+                <li><span class="font-semibold text-slate-800">Legacy & Brand:</span> High recognition globally.</li>
+                <li><span class="font-semibold text-slate-800">Low Fees:</span> Heavily subsidized education.</li>
+                <li><span class="font-semibold text-slate-800">Peer Group:</span> Highly competitive entrance.</li>
+              </ul>
+              <div class="bg-purple-50 p-3 rounded-lg text-xs">
+                <p class="font-bold text-purple-800 mb-1">Best For:</p>
+                <p>Students aiming for research, core engineering roles (Mech, Civil), or higher studies (MS/PhD).</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Private Universities -->
+          <div class="bg-white rounded-2xl p-6 card-shadow border-l-8 border-orange-500">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <h2 class="text-xl font-bold text-slate-800">Private Universities (BITS, VIT)</h2>
+                <p class="text-xs text-slate-500 font-medium uppercase tracking-wide">Holistic Exposure</p>
+              </div>
+              <span class="bg-orange-100 text-orange-700 text-[10px] font-bold px-2 py-1 rounded">Campus Life</span>
+            </div>
+            <div class="grid grid-cols-2 gap-4 text-sm text-slate-600">
+              <ul class="list-disc pl-4 space-y-1">
+                <li><span class="font-semibold text-slate-800">Infrastructure:</span> Modern labs & amenities.</li>
+                <li><span class="font-semibold text-slate-800">Flexibility:</span> Diverse electives & minor courses.</li>
+                <li><span class="font-semibold text-slate-800">Networking:</span> Strong alumni in corporate roles.</li>
+              </ul>
+              <div class="bg-orange-50 p-3 rounded-lg text-xs">
+                <p class="font-bold text-orange-800 mb-1">Best For:</p>
+                <p>Students seeking a balanced college life, management roles, or entrepreneurship exposure.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. New-Age Tech Schools -->
+          <div class="bg-white rounded-2xl p-6 card-shadow border-l-8 border-blue-600 ring-4 ring-blue-50">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <h2 class="text-xl font-bold text-slate-800">New-Age Tech Schools</h2>
+                <p class="text-xs text-slate-500 font-medium uppercase tracking-wide">Scaler School of Technology, Newton</p>
+              </div>
+              <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-1 rounded">Industry Focused</span>
+            </div>
+            <div class="grid grid-cols-2 gap-4 text-sm text-slate-600">
+              <ul class="list-disc pl-4 space-y-1">
+                <li><span class="font-semibold text-slate-800">Curriculum:</span> Designed by top Tech Leaders (CTOs).</li>
+                <li><span class="font-semibold text-slate-800">Hands-on:</span> "Learn by Doing" & integrated internships.</li>
+                <li><span class="font-semibold text-slate-800">Outcome:</span> Focused purely on top-tier tech jobs.</li>
+              </ul>
+              <div class="bg-blue-50 p-3 rounded-lg text-xs">
+                <p class="font-bold text-blue-800 mb-1">Best For:</p>
+                <p>Students determined to be Software Engineers, Data Scientists, or Tech Founders.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Closing Section -->
+        <div class="mt-8 text-center">
+          <h3 class="text-2xl font-bold text-slate-800 mb-2">All the Best!</h3>
+          <p class="text-slate-500 text-sm max-w-lg mx-auto">
+            Your future is bright. Choose the path that aligns with <b>your</b> learning style.
+          </p>
+        </div>
+
+      </main>
+
+      <!-- Footer -->
+      <footer class="p-8 text-center">
+        <div class="flex flex-col items-center justify-center">
+            <p class="text-xs text-slate-400 font-semibold tracking-wider mb-3">BROUGHT TO YOU BY</p>
+            <div class="flex items-center gap-4 bg-white px-6 py-3 rounded-full shadow-sm border border-slate-100">
+                <img src="{{PARTNER_LOGO}}" alt="Partner Logo" class="{{LOGO_CLASS}} object-contain h-8">
+                <div class="h-8 w-px bg-slate-200"></div>
+                <div class="flex items-center gap-2">
+                    <span class="text-[10px] text-slate-400 font-medium">Powered by</span>
+                    <img src="./assets/footer_logo_2.png" alt="Naviksha" class="h-6 w-auto">
+                </div>
+            </div>
+        </div>
+      </footer>
+
+    </div>
+  </body>
+</html>
