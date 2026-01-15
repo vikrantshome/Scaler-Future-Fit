@@ -3,9 +3,10 @@ import { ArrowRight, Brain, Target, TrendingUp, CheckCircle, Code, Briefcase, Us
 
 interface LandingPageProps {
   onStart: () => void;
+  onLogin: () => void;
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
+const LandingPage: React.FC<LandingPageProps> = ({ onStart, onLogin }) => {
   return (
     <div className="flex flex-col min-h-[calc(100vh-80px)] bg-white">
       {/* Hero Section */}
@@ -23,14 +24,25 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
             <p className="text-lg md:text-xl text-slate-300 mb-8 leading-relaxed max-w-lg">
               Not sure which engineering branch fits you? Take our scientific assessment to discover your path and see if you have what it takes to join the top 1% of tech talent.
             </p>
-            <button 
-              onClick={onStart}
-              className="group bg-scaler-blue hover:bg-blue-600 text-white font-bold py-4 px-8 rounded-xl shadow-lg shadow-blue-500/30 transition-all flex items-center text-lg"
-            >
-              Start Free Career Fit Test
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
-            <p className="mt-4 text-sm text-slate-400">Takes only 5 minutes • Powered Naviksha Ai</p>
+            <div className="flex flex-col items-start gap-4">
+              <button 
+                onClick={onStart}
+                className="group bg-scaler-blue hover:bg-blue-600 text-white font-bold py-4 px-8 rounded-xl shadow-lg shadow-blue-500/30 transition-all flex items-center text-lg"
+              >
+                Start Free Career Fit Test
+                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+              <p className="text-slate-400 text-sm">
+                Already taken the test?{' '}
+                <button 
+                  onClick={onLogin}
+                  className="text-blue-400 hover:text-blue-300 font-semibold underline underline-offset-4 transition-colors"
+                >
+                  Login to view results
+                </button>
+              </p>
+            </div>
+            <p className="mt-4 text-sm text-slate-500">Takes only 5 minutes • Powered Naviksha Ai</p>
           </div>
           <div className="md:w-1/2 flex justify-center">
             {/* Relevant Image: Students coding/collaborating */}

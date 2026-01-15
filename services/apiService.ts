@@ -77,3 +77,19 @@ export const generateReport = async (studentId: string): Promise<string | null> 
     return null;
   }
 };
+
+export const loginStudent = async (phone: string): Promise<any> => {
+  try {
+    const endpoint = `${BASE_URL}/api/login`;
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone }),
+    });
+    return await response.json();
+  } catch (error) {
+    console.error("Login failed:", error);
+    return { success: false, error: 'Network error' };
+  }
+};
+
