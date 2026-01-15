@@ -6,6 +6,7 @@ import SignupForm from './components/SignupForm';
 import ResultsView from './components/ResultsView';
 import LoginView from './components/LoginView';
 import Header from './components/Header';
+import StickyCTA from './components/StickyCTA';
 import { saveStudentData, loginStudent } from './services/apiService';
 import { UserResponses, UserInfo, AnalysisResult, calculateResults } from './services/scoringService';
 import { Loader2 } from 'lucide-react';
@@ -112,6 +113,11 @@ function App() {
         
         {appState === AppState.RESULTS && results && responses && userInfo && (
           <ResultsView results={results} responses={responses} studentId={studentId} onRestart={restart} userInfo={userInfo} />
+        )}
+
+        {/* Sticky CTA - Visible on Landing and Results */}
+        {(appState === AppState.LANDING || appState === AppState.RESULTS) && (
+          <StickyCTA />
         )}
       </div>
     </div>

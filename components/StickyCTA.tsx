@@ -9,10 +9,10 @@ const StickyCTA = () => {
         <span className="text-xs font-bold text-slate-900 leading-tight">Know more about CSE & Scaler</span>
       </div>
       <a 
-        href="https://www.scaler.com/school-of-technology/" 
+        href="https://wa.me/919674255951?text=Hi%2C%20I%20want%20to%20know%20more%20about%20Scaler%20School%20of%20Technology" 
         target="_blank" 
         rel="noreferrer"
-        className="bg-blue-600 text-white text-xs font-bold py-2.5 px-4 rounded-lg shadow-lg shadow-blue-500/30 hover:bg-blue-700 active:scale-95 transition-all flex items-center whitespace-nowrap"
+        className="bg-green-600 text-white text-xs font-bold py-2.5 px-4 rounded-lg shadow-lg shadow-green-500/30 hover:bg-green-700 active:scale-95 transition-all flex items-center whitespace-nowrap"
       >
         <PhoneCall className="w-3 h-3 mr-1.5" />
         Talk to Counsellor
