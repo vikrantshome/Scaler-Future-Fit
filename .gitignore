@@ -31,3 +31,7 @@ dist-ssr
 *.db
 *.db-shm
 *.db-wal
+
+# Google API Secrets
+server/client_secret.json
+server/token.json

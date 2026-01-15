@@ -2,25 +2,66 @@ import React, { useEffect, useState } from 'react';
 import { AnalysisResult, UserResponses } from '../types';
 import { ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
 import { generateAIInsights } from '../services/geminiService';
-import { Download, Share2, Award, Zap, BookOpen, ArrowRight, Briefcase, Building2, GraduationCap } from 'lucide-react';
+import { generateReport, saveStudentData } from '../services/apiService';
+import { Download, Share2, Award, Zap, BookOpen, ArrowRight, Briefcase, Building2, GraduationCap, Loader2 } from 'lucide-react';
 
 interface ResultsViewProps {
   results: AnalysisResult;
   responses: UserResponses;
+  studentId: string | null;
   onRestart: () => void;
+  userInfo: any;
 }
 
-const ResultsView: React.FC<ResultsViewProps> = ({ results, responses, onRestart }) => {
-  const [aiText, setAiText] = useState<string>('Generating personalized insights with AI...');
+const ResultsView: React.FC<ResultsViewProps> = ({ results, responses, studentId: initialStudentId, onRestart, userInfo }) => {
+  const [aiText, setAiText] = useState<string>('');
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [isGeneratingAI, setIsGeneratingAI] = useState(true);
+  const [currentStudentId, setCurrentStudentId] = useState<string | null>(initialStudentId);
+
+  // Calculate dominant traits handling ties
+  const maxScore = Math.max(...results.raisecProfile.map(p => p.score));
+  const dominantTypes = results.raisecProfile.filter(p => p.score === maxScore);
+  
+  const dominantTraits = dominantTypes.length >= 4 
+      ? "Balanced All-Rounder"
+      : dominantTypes.map(p => {
+           const names: Record<string, string> = { R: 'Realistic', I: 'Investigative', A: 'Artistic', S: 'Social', E: 'Enterprising', C: 'Conventional' };
+           return names[p.type] || p.type;
+      }).join(' / ');
 
   useEffect(() => {
     // Trigger AI generation
-    generateAIInsights(responses, results).then(setAiText);
+    setIsGeneratingAI(true);
+    generateAIInsights(responses, results).then(async (text) => {
+        setAiText(text);
+        setIsGeneratingAI(false);
+        
+        // Save the AI insights to the backend once generated
+        if (currentStudentId) {
+             // We'd ideally have an endpoint to just update insights, but we can re-save or 
+             // assuming saveStudentData handles updates or we might need a specific update call.
+             // However, given the context, let's assume we might need to resave to ensure insights are there
+             // for the PDF generation which reads from the DB. 
+             // Or better, let's assume generateReport sends the data if needed or the backend already has it.
+             // If backend generates PDF from DB, we MUST update the DB with this new insight.
+             
+             // Quick fix: Re-save student data with new AI insights included in results
+             const updatedResults = { ...results, aiInsight: text };
+             await saveStudentData(userInfo, responses, updatedResults, currentStudentId);
+        }
+    });
   }, [results, responses]);
+
+  // Update currentStudentId if prop changes (though usually it's set once)
+  useEffect(() => {
+      if (initialStudentId) setCurrentStudentId(initialStudentId);
+  }, [initialStudentId]);
+
 
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4 md:px-8">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         
         {/* Header */}
         <div className="text-center mb-12">
@@ -146,7 +187,7 @@ const ResultsView: React.FC<ResultsViewProps> = ({ results, responses, onRestart
                         <h3 className="text-2xl font-bold">Counselor's Insight</h3>
                     </div>
                     <p className="text-lg text-blue-50 leading-relaxed mb-6 whitespace-pre-line">
-                        {aiText}
+                        {isGeneratingAI ? 'Generating personalized insights with AI...' : aiText}
                     </p>
                     <div className="flex flex-wrap gap-4">
                          {results.topBranches.some(b => ['cse', 'ai_ds', 'algo_trading', 'it'].includes(b.branch.id)) && (
@@ -175,6 +216,24 @@ const ResultsView: React.FC<ResultsViewProps> = ({ results, responses, onRestart
                  <button onClick={onRestart} className="px-6 py-3 bg-white border border-slate-200 text-slate-700 font-semibold rounded-xl hover:bg-slate-50 transition-colors">
                     Retake Test
                 </button>
+                {currentStudentId && (
+                    <button 
+                        onClick={async () => {
+                            if (!currentStudentId) return;
+                            setIsDownloading(true);
+                            const result = await generateReport(currentStudentId);
+                            if (result && result !== 'downloaded') {
+                                window.open(result, '_blank');
+                            }
+                            setIsDownloading(false);
+                        }} 
+                        disabled={isDownloading || isGeneratingAI}
+                        className={`px-6 py-3 bg-white border border-slate-200 text-slate-700 font-semibold rounded-xl transition-colors flex items-center ${isDownloading || isGeneratingAI ? 'opacity-50 cursor-not-allowed' : 'hover:bg-slate-50'}`}
+                    >
+                        {(isDownloading || isGeneratingAI) ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Download className="w-4 h-4 mr-2" />}
+                        {isDownloading ? 'Generating PDF...' : isGeneratingAI ? 'Waiting for AI...' : 'Download Report'}
+                    </button>
+                )}
                 <button className="px-6 py-3 bg-scaler-blue text-white font-bold rounded-xl shadow-lg shadow-blue-500/30 hover:bg-blue-600 transition-colors">
                     Apply Now
                 </button>

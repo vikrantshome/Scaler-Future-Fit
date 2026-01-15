@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import LandingPage from './components/LandingPage';
+import TestInstructions from './components/TestInstructions';
 import TestInterface from './components/TestInterface';
 import SignupForm from './components/SignupForm';
 import ResultsView from './components/ResultsView';
@@ -11,6 +12,7 @@ import { Loader2 } from 'lucide-react';
 
 enum AppState {
   LANDING,
+  INSTRUCTIONS,
   TEST,
   SIGNUP,
   LOADING,
@@ -22,6 +24,11 @@ function App() {
   const [responses, setResponses] = useState<UserResponses | null>(null);
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [results, setResults] = useState<AnalysisResult | null>(null);
+  const [studentId, setStudentId] = useState<string | null>(null);
+
+  const startFlow = () => {
+    setAppState(AppState.INSTRUCTIONS);
+  };
 
   const startTest = () => {
     setAppState(AppState.TEST);
@@ -42,7 +49,8 @@ function App() {
       setResults(calculatedResults);
 
       // 2. Save Data (Simulated DB call)
-      await saveStudentData(info, responses, calculatedResults);
+      const savedId = await saveStudentData(info, responses, calculatedResults, undefined);
+      if (savedId) setStudentId(savedId);
 
       // 3. Show Results
       setAppState(AppState.RESULTS);
@@ -53,6 +61,7 @@ function App() {
     setResponses(null);
     setUserInfo(null);
     setResults(null);
+    setStudentId(null);
     setAppState(AppState.LANDING);
   };
 
@@ -62,7 +71,9 @@ function App() {
       
       {/* Main Content Container with padding-top for fixed header */}
       <div className="pt-16 md:pt-20">
-        {appState === AppState.LANDING && <LandingPage onStart={startTest} />}
+        {appState === AppState.LANDING && <LandingPage onStart={startFlow} />}
+
+        {appState === AppState.INSTRUCTIONS && <TestInstructions onStart={startTest} />}
         
         {appState === AppState.TEST && <TestInterface onComplete={handleTestComplete} />}
 
@@ -78,8 +89,8 @@ function App() {
           </div>
         )}
         
-        {appState === AppState.RESULTS && results && responses && (
-          <ResultsView results={results} responses={responses} onRestart={restart} />
+        {appState === AppState.RESULTS && results && responses && userInfo && (
+          <ResultsView results={results} responses={responses} studentId={studentId} onRestart={restart} userInfo={userInfo} />
         )}
       </div>
     </div>
