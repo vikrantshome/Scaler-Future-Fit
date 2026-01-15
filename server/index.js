@@ -4,6 +4,9 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const fs = require('fs').promises;
 const path = require('path');
+
+console.log(`Environment: ${process.env.NODE_ENV}`);
+
 const puppeteer = process.env.NODE_ENV === 'production' ? require('puppeteer-core') : require('puppeteer');
 const chromium = require('@sparticuz/chromium');
 const { PDFDocument } = require('pdf-lib');
