@@ -6,6 +6,7 @@ import SignupForm from './components/SignupForm';
 import ResultsView from './components/ResultsView';
 import LoginView from './components/LoginView';
 import Header from './components/Header';
+import StickyCTA from './components/StickyCTA';
 import { saveStudentData, loginStudent } from './services/apiService';
 import { UserResponses, UserInfo, AnalysisResult, calculateResults } from './services/scoringService';
 import { Loader2 } from 'lucide-react';
@@ -41,6 +42,8 @@ function App() {
 
   const handleTestComplete = (data: UserResponses) => {
     setResponses(data);
+    const calculatedResults = calculateResults(data);
+    setResults(calculatedResults);
     setAppState(AppState.SIGNUP);
   };
 
@@ -49,12 +52,12 @@ function App() {
     if (responses) {
       setAppState(AppState.LOADING);
       
-      // 1. Calculate Results
-      const calculatedResults = calculateResults(responses);
-      setResults(calculatedResults);
+      // 1. Use calculated results or recalculate if missing
+      const finalResults = results || calculateResults(responses);
+      if (!results) setResults(finalResults);
 
       // 2. Save Data (Simulated DB call)
-      const savedId = await saveStudentData(info, responses, calculatedResults, undefined);
+      const savedId = await saveStudentData(info, responses, finalResults, undefined);
       if (savedId) setStudentId(savedId);
 
       // 3. Show Results
@@ -97,7 +100,13 @@ function App() {
         
         {appState === AppState.TEST && <TestInterface onComplete={handleTestComplete} />}
 
-        {appState === AppState.SIGNUP && <SignupForm onSubmit={handleSignupComplete} />}
+        {appState === AppState.SIGNUP && (
+          <SignupForm 
+            onSubmit={handleSignupComplete} 
+            topResult={results?.topBranches[0]} 
+            dominantType={results?.dominantType}
+          />
+        )}
         
         {appState === AppState.LOADING && (
           <div className="min-h-[60vh] flex flex-col items-center justify-center">
@@ -112,6 +121,11 @@ function App() {
         
         {appState === AppState.RESULTS && results && responses && userInfo && (
           <ResultsView results={results} responses={responses} studentId={studentId} onRestart={restart} userInfo={userInfo} />
+        )}
+
+        {/* Sticky CTA - Visible on Landing and Results */}
+        {(appState === AppState.LANDING || appState === AppState.RESULTS) && (
+          <StickyCTA />
         )}
       </div>
     </div>

@@ -200,43 +200,96 @@ const ResultsView: React.FC<ResultsViewProps> = ({ results, responses, studentId
             </div>
         </div>
 
-        {/* Scaler Pitch */}
-        <div className="bg-blue-50 border border-blue-100 rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex-1">
-                <h3 className="text-xl font-bold text-slate-900 mb-2">Build a career, not just a degree.</h3>
-                <p className="text-slate-600 mb-4">
-                    Scaler School of Technology offers a 4-year residential undergraduate program in Computer Science, designed to create the top 1% of software engineers.
-                </p>
-                <div className="flex items-center gap-4 text-sm text-slate-700 font-medium">
-                    <span className="flex items-center"><BookOpen className="w-4 h-4 mr-1 text-scaler-blue"/> Real-world projects</span>
-                    <span className="flex items-center"><Award className="w-4 h-4 mr-1 text-scaler-blue"/> Top-tier Placements</span>
+        {/* Report Value & Download Section */}
+        <div className="mb-12 bg-gradient-to-r from-slate-900 to-slate-800 rounded-3xl p-8 md:p-12 text-white shadow-2xl relative overflow-hidden">
+            {/* Background Decor */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500 rounded-full mix-blend-overlay filter blur-3xl opacity-10 transform translate-x-1/2 -translate-y-1/2"></div>
+            
+            <div className="relative z-10 flex flex-col md:flex-row gap-10 items-center">
+                <div className="flex-1">
+                    <div className="inline-block px-4 py-1 bg-green-500/20 text-green-300 rounded-full text-xs font-bold uppercase tracking-wider mb-4 border border-green-500/30">
+                        Free Detailed Analysis
+                    </div>
+                    <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
+                        Unlock Your Full <br/><span className="text-blue-400">Career Roadmap</span>
+                    </h2>
+                    <p className="text-slate-300 mb-8 text-lg max-w-xl">
+                        This dashboard is just the beginning. Download your comprehensive PDF report to get deep insights that matter.
+                    </p>
+                    
+                    <div className="grid sm:grid-cols-2 gap-x-8 gap-y-4 mb-8">
+                        {[
+                            "Detailed Salary Trends & Career Path",
+                            "Top Colleges", 
+                            "Class 11-12 Focus Areas",
+                            "Target Exams and Future Trends"
+                        ].map((feat, i) => (
+                            <div key={i} className="flex items-center text-sm font-medium text-slate-200">
+                                <div className="w-5 h-5 rounded-full bg-blue-500/20 flex items-center justify-center mr-3 text-blue-400">
+                                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>
+                                </div>
+                                {feat}
+                            </div>
+                        ))}
+                    </div>
+
+                    {currentStudentId && (
+                        <button 
+                            onClick={async () => {
+                                if (!currentStudentId) return;
+                                setIsDownloading(true);
+                                const result = await generateReport(currentStudentId);
+                                if (result && result !== 'downloaded') {
+                                    window.open(result, '_blank');
+                                }
+                                setIsDownloading(false);
+                            }} 
+                            disabled={isDownloading || isGeneratingAI}
+                            className={`w-full sm:w-auto px-8 py-4 bg-white text-slate-900 font-bold rounded-xl shadow-lg hover:bg-blue-50 hover:scale-105 transition-all flex items-center justify-center ${isDownloading || isGeneratingAI ? 'opacity-70 cursor-not-allowed' : ''}`}
+                        >
+                            {(isDownloading || isGeneratingAI) ? <Loader2 className="w-5 h-5 mr-3 animate-spin text-blue-600" /> : <Download className="w-5 h-5 mr-3 text-blue-600" />}
+                            {isDownloading ? 'Generating PDF...' : isGeneratingAI ? 'Finalizing Analysis...' : 'Download Full Report'}
+                        </button>
+                    )}
+                </div>
+
+                {/* Visual Representation of Report */}
+                <div className="hidden md:block relative w-64 h-80 flex-shrink-0 perspective-1000 group">
+                    <div className="absolute inset-0 bg-blue-600 rounded-lg transform rotate-6 scale-95 opacity-40 group-hover:rotate-12 transition-transform duration-500"></div>
+                    <div className="absolute inset-0 bg-white rounded-lg shadow-2xl border-t-4 border-blue-500 flex flex-col overflow-hidden transform transition-transform duration-500 group-hover:-translate-y-2">
+                        <div className="h-32 bg-slate-100 flex items-center justify-center border-b border-slate-200">
+                            <div className="w-16 h-16 bg-white rounded-full shadow-sm flex items-center justify-center">
+                                <Award className="w-8 h-8 text-blue-600" />
+                            </div>
+                        </div>
+                        <div className="p-4 space-y-3">
+                            <div className="h-4 bg-slate-100 rounded w-3/4"></div>
+                            <div className="h-2 bg-slate-100 rounded w-full"></div>
+                            <div className="h-2 bg-slate-100 rounded w-5/6"></div>
+                            <div className="h-2 bg-slate-100 rounded w-full"></div>
+                            <div className="mt-4 pt-4 border-t border-slate-100 flex justify-between items-center">
+                                <div className="h-8 w-8 bg-blue-100 rounded-full"></div>
+                                <div className="h-3 bg-slate-100 rounded w-1/3"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+
+        {/* Action Footer */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 py-8 border-t border-slate-200">
+            <div className="text-center sm:text-left">
+                <h4 className="font-bold text-slate-900">Not satisfied with your results?</h4>
+                <p className="text-sm text-slate-500">You can always try the assessment again.</p>
+            </div>
             <div className="flex gap-4">
-                 <button onClick={onRestart} className="px-6 py-3 bg-white border border-slate-200 text-slate-700 font-semibold rounded-xl hover:bg-slate-50 transition-colors">
+                <button onClick={onRestart} className="px-6 py-3 bg-white border border-slate-200 text-slate-600 font-semibold rounded-xl hover:bg-slate-50 transition-colors">
                     Retake Test
                 </button>
-                {currentStudentId && (
-                    <button 
-                        onClick={async () => {
-                            if (!currentStudentId) return;
-                            setIsDownloading(true);
-                            const result = await generateReport(currentStudentId);
-                            if (result && result !== 'downloaded') {
-                                window.open(result, '_blank');
-                            }
-                            setIsDownloading(false);
-                        }} 
-                        disabled={isDownloading || isGeneratingAI}
-                        className={`px-6 py-3 bg-white border border-slate-200 text-slate-700 font-semibold rounded-xl transition-colors flex items-center ${isDownloading || isGeneratingAI ? 'opacity-50 cursor-not-allowed' : 'hover:bg-slate-50'}`}
-                    >
-                        {(isDownloading || isGeneratingAI) ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Download className="w-4 h-4 mr-2" />}
-                        {isDownloading ? 'Generating PDF...' : isGeneratingAI ? 'Waiting for AI...' : 'Download Report'}
-                    </button>
-                )}
-                <button className="px-6 py-3 bg-scaler-blue text-white font-bold rounded-xl shadow-lg shadow-blue-500/30 hover:bg-blue-600 transition-colors">
-                    Apply Now
-                </button>
+                <a href="https://www.scaler.com/school-of-technology/" target="_blank" rel="noreferrer" className="px-6 py-3 bg-scaler-blue text-white font-bold rounded-xl shadow-lg hover:bg-blue-700 transition-colors">
+                    Apply to Scaler School of Technology
+                </a>
             </div>
         </div>
 

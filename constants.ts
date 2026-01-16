@@ -135,54 +135,55 @@ export const ENGINEERING_BRANCHES: Branch[] = [
       'Growth in Cloud & Edge Computing',
       'Focus on Cybersecurity & Ethical AI'
     ],
-    workEnvironment: 'Primarily office-based or remote; involves coding, design, and team collaboration.'
-  },
-  {
-    id: 'ai_ds',
-    name: 'AI & Data Science',
-    description: 'The future of intelligence. Requires strong math, pattern recognition, and problem-solving skills.',
-    weights: { I: 1.0, C: 0.8, math: 1.0, cs: 0.9, logic: 1.0 },
-    subCareers: [
-      { name: 'ML Engineer', description: 'Build predictive AI models.', recruiters: ['OpenAI', 'Google DeepMind', 'Uber'] },
-      { name: 'Data Analyst', description: 'Visualize and interpret data.', recruiters: ['Mu Sigma', 'ZS Associates'] },
-      { name: 'AI Researcher', description: 'Invent new AI algorithms.', recruiters: ['Microsoft Research', 'IBM Research'] }
-    ],
-    exams: [
-      { name: 'JEE Main/Advanced', type: 'National', description: 'IITs have specialized AI tracks' },
-      { name: 'Scaler NSET', type: 'New-age', description: 'Specialized AI curriculum' },
-      { name: 'BITSAT', type: 'Private', description: 'Math/Computing programs' },
-      { name: 'IIIT-H UGEE', type: 'New-age', description: 'Research in AI/ML' }
-    ],
-    salary: {
-      entry: '5-10 LPA',
-      midLevel: '18-40+ LPA'
-    },
-    topColleges: [
-      'IIT Delhi', 'IIT Bombay', 'IISc Bangalore', 
-      'IIT Madras', 'BITS Pilani', 'IIIT Hyderabad'
-    ],
-    focusAreas: {
-      subjects: ['Physics', 'Chemistry', 'Mathematics'],
-      topics: [
-        'Math: Probability, Statistics, Calculus, Linear Algebra',
-        'Physics: Analytical skills',
-        'Logical Reasoning & Data Interpretation'
-      ]
-    },
-    typicalRoles: {
-      roles: ['Data Scientist', 'ML Engineer', 'AI Engineer', 'Big Data Engineer'],
-      companies: ['Google', 'Microsoft', 'Amazon', 'IBM', 'Fractal Analytics', 'Mu Sigma']
-    },
-    futureTrends: [
-      'Pervasive AI integration across industries',
-      'Generative AI & Responsible AI advancements',
-      'Real-time data processing & ethics'
-    ],
-    workEnvironment: 'Office-based/Remote; involves data analysis, model building, and research.'
-  },
-  {
-    id: 'it',
-    name: 'Information Technology',
+        workEnvironment: 'Primarily office-based or remote; involves coding, design, and team collaboration.'
+      },
+      /*
+      {
+        id: 'ai_ds',
+        name: 'AI & Data Science',
+        description: 'The future of intelligence. Requires strong math, pattern recognition, and problem-solving skills.',
+        weights: { I: 1.0, C: 0.8, math: 1.0, cs: 0.9, logic: 1.0 },
+        subCareers: [
+          { name: 'ML Engineer', description: 'Build predictive AI models.', recruiters: ['OpenAI', 'Google DeepMind', 'Uber'] },
+          { name: 'Data Analyst', description: 'Visualize and interpret data.', recruiters: ['Mu Sigma', 'ZS Associates'] },
+          { name: 'AI Researcher', description: 'Invent new AI algorithms.', recruiters: ['Microsoft Research', 'IBM Research'] }
+        ],
+        exams: [
+          { name: 'JEE Main/Advanced', type: 'National', description: 'IITs have specialized AI tracks' },
+          { name: 'Scaler NSET', type: 'New-age', description: 'Specialized AI curriculum' },
+          { name: 'BITSAT', type: 'Private', description: 'Math/Computing programs' },
+          { name: 'IIIT-H UGEE', type: 'New-age', description: 'Research in AI/ML' }
+        ],
+        salary: {
+          entry: '5-10 LPA',
+          midLevel: '18-40+ LPA'
+        },
+        topColleges: [
+          'IIT Delhi', 'IIT Bombay', 'IISc Bangalore',
+          'IIT Madras', 'BITS Pilani', 'IIIT Hyderabad'
+        ],
+        focusAreas: {
+          subjects: ['Physics', 'Chemistry', 'Mathematics'],
+          topics: [
+            'Math: Probability, Statistics, Calculus, Linear Algebra',
+            'Physics: Analytical skills',
+            'Logical Reasoning & Data Interpretation'
+          ]
+        },
+        typicalRoles: {
+          roles: ['Data Scientist', 'ML Engineer', 'AI Engineer', 'Big Data Engineer'],
+          companies: ['Google', 'Microsoft', 'Amazon', 'IBM', 'Fractal Analytics', 'Mu Sigma']
+        },
+        futureTrends: [
+          'Pervasive AI integration across industries',
+          'Generative AI & Responsible AI advancements',
+          'Real-time data processing & ethics'
+        ],
+        workEnvironment: 'Office-based/Remote; involves data analysis, model building, and research.'
+      },
+      */
+      {
+        id: 'it',    name: 'Information Technology',
     description: 'Focuses on the application of computers and telecommunications to store, retrieve, and transmit data.',
     weights: { C: 0.8, S: 0.6, I: 0.6, cs: 0.9, math: 0.6 },
     subCareers: [
