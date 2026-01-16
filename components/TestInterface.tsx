@@ -94,7 +94,7 @@ const TestInterface: React.FC<TestInterfaceProps> = ({ onComplete }) => {
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 transition-all duration-300">
+        <div className="bg-white rounded-2xl shadow-xl p-6 md:p-12 transition-all duration-300">
           <h2 className="text-2xl md:text-3xl font-medium text-slate-900 mb-8 leading-snug">
             {currentQuestion.text}
           </h2>

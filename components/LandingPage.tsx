@@ -50,7 +50,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart, onLogin }) => {
                 <img 
                 src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80" 
                 alt="Students collaborating on technology projects" 
-                className="object-cover h-[400px] w-full transform group-hover:scale-105 transition-transform duration-700"
+                className="object-cover h-[250px] md:h-[400px] w-full transform group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent flex items-end p-6">
                     <p className="text-white font-medium">Experience the 4-year residential program designed by Industry Leaders.</p>
@@ -62,7 +62,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart, onLogin }) => {
 
       {/* Why Scaler / Why Match Matters */}
       <section className="py-20 px-6 max-w-7xl mx-auto">
-        <div className="grid md:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           <div className="bg-slate-50 p-8 rounded-2xl border border-slate-100 hover:shadow-xl transition-shadow">
             <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-6">
               <Brain className="w-6 h-6" />
