@@ -3,8 +3,8 @@ import { UserInfo, UserResponses, AnalysisResult } from '../types';
 const BASE_URL = import.meta.env.VITE_API_URL || '';
 
 export const saveStudentData = async (
-  userInfo: UserInfo, 
-  responses: UserResponses, 
+  userInfo: UserInfo,
+  responses: UserResponses,
   results: AnalysisResult,
   id?: string
 ): Promise<string | null> => {
@@ -12,7 +12,7 @@ export const saveStudentData = async (
     const endpoint = `${BASE_URL}/api/save-student`;
     console.log("------------------------------------------------");
     console.log(`🔌 Sending data to backend: ${endpoint}`);
-    
+
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
@@ -27,7 +27,7 @@ export const saveStudentData = async (
     });
 
     if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
@@ -92,4 +92,20 @@ export const loginStudent = async (phone: string): Promise<any> => {
     return { success: false, error: 'Network error' };
   }
 };
+
+export const upsertStudent = async (student: any): Promise<{ success: boolean; id?: string; name?: string; error?: string }> => {
+  try {
+    const endpoint = `${BASE_URL}/api/admin/upsert-student`;
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(student),
+    });
+    return await response.json();
+  } catch (error: any) {
+    console.error('Upsert Error:', error);
+    return { success: false, error: error.message || 'Network error' };
+  }
+};
+
 
