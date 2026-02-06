@@ -22,17 +22,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
-# Environment Variables
-.env
-.env.*
-
-# Databases
-*.db
-*.db-shm
-*.db-wal
-
-# Google API Secrets
-server/client_secret.json
-server/token.json
-omr-scannner/data/*.pdf
