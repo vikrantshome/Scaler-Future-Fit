@@ -33,7 +33,7 @@ async function getBrowser() {
     if (browserInstance && browserInstance.isConnected()) {
         return browserInstance;
     }
-    
+
     console.log('🔄 Launching new browser instance...');
     try {
         const options = process.env.NODE_ENV === 'production' ? {
@@ -45,7 +45,7 @@ async function getBrowser() {
             headless: "new",
             args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
         };
-        
+
         console.log('Browser launch options:', JSON.stringify(options, null, 2));
 
         browserInstance = await puppeteer.launch(options);
@@ -60,7 +60,7 @@ async function getBrowser() {
 // --- INITIALIZATION ---
 async function preloadAssets() {
     console.log('🚀 Preloading assets and templates...');
-    
+
     try {
         // 1. Load JSON Data
         try {
@@ -79,7 +79,7 @@ async function preloadAssets() {
                 'allen_footer': 'assets/page1/sst_logo.png', // Using same logo for footer for now or placeholder
                 'compass': 'assets/page1/compass.png'
             };
-            
+
             for (const [key, filePath] of Object.entries(logoFiles)) {
                 try {
                     const imgPath = path.join(__dirname, 'templates', filePath);
@@ -96,11 +96,11 @@ async function preloadAssets() {
 
         // 2. Load and Pre-process Templates
         const templates = ['page1.html', 'page2.html', 'branch_page.html', 'page6.html'];
-        
+
         for (const tName of templates) {
             try {
                 let html = await fs.readFile(path.join(__dirname, 'templates', tName), 'utf8');
-                
+
                 // Find all image tags and replace with Base64 immediately
                 const imageSrcRegex = /src="\.\/assets\/([^"]+)"/g;
                 let match;
@@ -122,7 +122,7 @@ async function preloadAssets() {
                 }
                 CACHE.templates[tName] = html;
             } catch (err) {
-                 console.warn(`⚠️ Template ${tName} not found.`);
+                console.warn(`⚠️ Template ${tName} not found.`);
             }
         }
         console.log('✅ Assets preloaded successfully.');
@@ -148,7 +148,7 @@ function populateBranchPage(htmlContent, branchesToRender, startIndex = 0) {
         const globalIndex = startIndex + index + 1;
         const branch = item.branch;
         const score = Math.round(item.score);
-        
+
         // --- 1. Sub-Careers ---
         const subCareersHtml = (branch.subCareers || []).slice(0, 3).map(career => `
             <li class="text-sm mb-2">
@@ -206,7 +206,7 @@ function populateBranchPage(htmlContent, branchesToRender, startIndex = 0) {
         // --- 3. Salary & Top Institutes ---
         const salary = branch.salary || {};
         const colleges = (branch.topColleges || []).slice(0, 5).join(', ');
-        
+
         const salaryInstituteSection = (salary.entry || colleges) ? `
             <div class="grid grid-cols-2 gap-4 mb-4">
                 <div class="bg-green-50 p-3 rounded-lg border border-green-100">
@@ -237,7 +237,7 @@ function populateBranchPage(htmlContent, branchesToRender, startIndex = 0) {
                 </h4>
                 <div class="text-[11px] text-slate-700">
                     <span class="font-bold">Subjects:</span> ${focus.subjects?.join(', ') || 'N/A'}<br>
-                    <span class="font-bold">Topics:</span> ${focus.topics?.slice(0,3).join('; ') || 'N/A'}
+                    <span class="font-bold">Topics:</span> ${focus.topics?.slice(0, 3).join('; ') || 'N/A'}
                 </div>
             </div>
         ` : '';
@@ -245,7 +245,7 @@ function populateBranchPage(htmlContent, branchesToRender, startIndex = 0) {
         // --- 5. Typical Roles & Trends ---
         const roles = (branch.typicalRoles?.roles || []).slice(0, 4).join(', ');
         const trends = (branch.futureTrends || []).slice(0, 2).map(t => `<li class="truncate">• ${t}</li>`).join('');
-        
+
         const rolesTrendsSection = (roles || trends) ? `
             <div class="grid grid-cols-2 gap-4 mb-4">
                 <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
@@ -320,10 +320,10 @@ function populateBranchPage(htmlContent, branchesToRender, startIndex = 0) {
 }
 
 function generateReportHTML(templateName, data, chunkIndex = 0, startIndex = 0, customBranches = null) {
-    let htmlContent = CACHE.templates[templateName] || ''; 
+    let htmlContent = CACHE.templates[templateName] || '';
 
     console.log("check data for report : ", data.assessment);
-    
+
 
     // Logo Logic
     const mainLogoSrc = CACHE.images['allen'] || '';
@@ -342,10 +342,10 @@ function generateReportHTML(templateName, data, chunkIndex = 0, startIndex = 0, 
             .replace('Student ID: <span class="font-bold">564890</span>', `Student ID: <span class="font-bold">${data._id || 'N/A'}</span>`)
             .replace('St. Joseph English School', info.schoolName || 'School Name')
             .replace('Grade 10 – CBSE', `Grade ${info.grade || 'N/A'}`);
-            
+
     } else if (templateName === 'page2.html') {
         const raisecRaw = data.assessment?.raisec || {};
-        
+
         // Calculate aggregate scores
         const raisec = {
             R: (raisecRaw['r1'] || 0) + (raisecRaw['r2'] || 0),
@@ -362,20 +362,20 @@ function generateReportHTML(templateName, data, chunkIndex = 0, startIndex = 0, 
         const dominantTypes = scores
             .filter(([_, score]) => score === maxScore)
             .map(([type]) => type);
-            
+
         const typeNames = {
             'R': 'Realistic', 'I': 'Investigative', 'A': 'Artistic',
             'S': 'Social', 'E': 'Enterprising', 'C': 'Conventional'
         };
-        
+
         // If 4 or more traits are dominant, label as "Balanced All-Rounder"
-        const dominantTraitString = dominantTypes.length >= 4 
-            ? "Balanced All-Rounder" 
+        const dominantTraitString = dominantTypes.length >= 4
+            ? "Balanced All-Rounder"
             : dominantTypes.map(t => typeNames[t] || t).join(' / ');
 
         const insight = data.results?.aiInsight || getRiasecInsight(raisec);
         const scoresArray = `[${raisec.R}, ${raisec.I}, ${raisec.A}, ${raisec.S}, ${raisec.E}, ${raisec.C}]`;
-        
+
         htmlContent = htmlContent
             .replace('{{SUMMARY_PARAGRAPH}}', `We analyzed your responses to understand your engineering aptitude. You show a strong inclination towards the <span class="font-bold text-blue-600">${dominantTraitString || 'General'}</span> domain.`)
             .replace('{{RIASEC_INSIGHT}}', insight)
@@ -384,11 +384,11 @@ function generateReportHTML(templateName, data, chunkIndex = 0, startIndex = 0, 
 
     } else if (templateName === 'branch_page.html') {
         const branchName = customBranches && customBranches.length > 0 ? customBranches[0].branch.name : 'Recommendation';
-        
+
         htmlContent = htmlContent
             .replace('{{BRANCH_INDEX}}', chunkIndex + 1)
             .replace('{{BRANCH_NAME}}', branchName);
-        
+
         htmlContent = populateBranchPage(htmlContent, customBranches, startIndex);
     }
 
@@ -410,7 +410,7 @@ async function generatePdfPage(browser, htmlContent) {
         });
 
         await page.setContent(htmlContent, { waitUntil: 'networkidle0', timeout: 60000 });
-        
+
         const pdfBuffer = await page.pdf({
             format: 'A4',
             printBackground: true,
@@ -430,95 +430,95 @@ async function generatePdfPage(browser, htmlContent) {
 app.get('/', (req, res) => res.send('Scaler Future Fit API is running'));
 
 app.post('/api/save-student', async (req, res) => {
-  try {
-    const { userInfo, responses, results, id } = req.body;
-    
-    // Defensive parsing for nested JSON strings if they exist
-    if (results && results.topBranches) {
-        results.topBranches.forEach(item => {
-            if (item.branch) {
-                // Normalize exams
-                if (typeof item.branch.exams === 'string') {
-                    try {
-                        item.branch.exams = JSON.parse(item.branch.exams);
-                    } catch (e) {
-                        console.error('Failed to parse exams JSON', e);
-                        item.branch.exams = [];
-                    }
-                } else if (Array.isArray(item.branch.exams) && item.branch.exams.length === 1 && typeof item.branch.exams[0] === 'string') {
-                     try {
-                        item.branch.exams = JSON.parse(item.branch.exams[0]);
-                     } catch (e) {
-                        console.error('Failed to parse exams inner JSON', e);
-                     }
-                }
+    try {
+        const { userInfo, responses, results, id } = req.body;
 
-                // Normalize subCareers
-                if (typeof item.branch.subCareers === 'string') {
-                    try {
-                        item.branch.subCareers = JSON.parse(item.branch.subCareers);
-                    } catch (e) {
-                        console.error('Failed to parse subCareers JSON', e);
-                        item.branch.subCareers = [];
+        // Defensive parsing for nested JSON strings if they exist
+        if (results && results.topBranches) {
+            results.topBranches.forEach(item => {
+                if (item.branch) {
+                    // Normalize exams
+                    if (typeof item.branch.exams === 'string') {
+                        try {
+                            item.branch.exams = JSON.parse(item.branch.exams);
+                        } catch (e) {
+                            console.error('Failed to parse exams JSON', e);
+                            item.branch.exams = [];
+                        }
+                    } else if (Array.isArray(item.branch.exams) && item.branch.exams.length === 1 && typeof item.branch.exams[0] === 'string') {
+                        try {
+                            item.branch.exams = JSON.parse(item.branch.exams[0]);
+                        } catch (e) {
+                            console.error('Failed to parse exams inner JSON', e);
+                        }
                     }
-                } else if (Array.isArray(item.branch.subCareers) && item.branch.subCareers.length === 1 && typeof item.branch.subCareers[0] === 'string') {
-                     try {
-                        item.branch.subCareers = JSON.parse(item.branch.subCareers[0]);
-                     } catch (e) {
-                        console.error('Failed to parse subCareers inner JSON', e);
-                     }
+
+                    // Normalize subCareers
+                    if (typeof item.branch.subCareers === 'string') {
+                        try {
+                            item.branch.subCareers = JSON.parse(item.branch.subCareers);
+                        } catch (e) {
+                            console.error('Failed to parse subCareers JSON', e);
+                            item.branch.subCareers = [];
+                        }
+                    } else if (Array.isArray(item.branch.subCareers) && item.branch.subCareers.length === 1 && typeof item.branch.subCareers[0] === 'string') {
+                        try {
+                            item.branch.subCareers = JSON.parse(item.branch.subCareers[0]);
+                        } catch (e) {
+                            console.error('Failed to parse subCareers inner JSON', e);
+                        }
+                    }
                 }
-            }
-        });
-    }
-    
-    if (id) {
-        // Update existing
-        const updatedProfile = await StudentProfile.findByIdAndUpdate(
-            id,
-            {
-                personalInfo: userInfo,
-                assessment: { raisec: responses.raisec, academic: responses.academic },
-                results: {
-                    topBranches: results.topBranches,
-                    raisecProfile: results.raisecProfile,
-                    dominantType: results.dominantType,
-                    aiInsight: results.aiInsight || ''
-                }
-            },
-            { new: true }
-        );
-        if (updatedProfile) {
-            console.log(`📝 Updated profile for: ${userInfo.fullName} (${id})`);
-            return res.status(200).json({ success: true, id: updatedProfile._id });
+            });
         }
-    }
 
-    // Create new
-    const newProfile = new StudentProfile({
-      personalInfo: userInfo,
-      assessment: { raisec: responses.raisec, academic: responses.academic },
-      results: {
-        topBranches: results.topBranches,
-        raisecProfile: results.raisecProfile,
-        dominantType: results.dominantType,
-        aiInsight: results.aiInsight || ''
-      },
-      submittedAt: new Date()
-    });
-    const savedProfile = await newProfile.save();
-    console.log(`📝 Saved profile for: ${userInfo.fullName}`);
-    res.status(201).json({ success: true, id: savedProfile._id });
-  } catch (error) {
-    console.error('Save Error:', error);
-    res.status(500).json({ success: false, message: 'Server error saving data' });
-  }
+        if (id) {
+            // Update existing
+            const updatedProfile = await StudentProfile.findByIdAndUpdate(
+                id,
+                {
+                    personalInfo: userInfo,
+                    assessment: { raisec: responses.raisec, academic: responses.academic },
+                    results: {
+                        topBranches: results.topBranches,
+                        raisecProfile: results.raisecProfile,
+                        dominantType: results.dominantType,
+                        aiInsight: results.aiInsight || ''
+                    }
+                },
+                { new: true }
+            );
+            if (updatedProfile) {
+                console.log(`📝 Updated profile for: ${userInfo.fullName} (${id})`);
+                return res.status(200).json({ success: true, id: updatedProfile._id });
+            }
+        }
+
+        // Create new
+        const newProfile = new StudentProfile({
+            personalInfo: userInfo,
+            assessment: { raisec: responses.raisec, academic: responses.academic },
+            results: {
+                topBranches: results.topBranches,
+                raisecProfile: results.raisecProfile,
+                dominantType: results.dominantType,
+                aiInsight: results.aiInsight || ''
+            },
+            submittedAt: new Date()
+        });
+        const savedProfile = await newProfile.save();
+        console.log(`📝 Saved profile for: ${userInfo.fullName}`);
+        res.status(201).json({ success: true, id: savedProfile._id });
+    } catch (error) {
+        console.error('Save Error:', error);
+        res.status(500).json({ success: false, message: 'Server error saving data' });
+    }
 });
 
 // PDF Generation Endpoint
 app.post('/api/generate-report', async (req, res) => {
     const { studentID, data } = req.body; // Can accept ID to fetch or raw data
-    
+
     let reportData = data;
     if (!reportData && studentID) {
         try {
@@ -551,7 +551,7 @@ app.post('/api/generate-report', async (req, res) => {
                 startIndex: i
             });
         }
-        
+
         pagesToGenerate.push({ template: 'page6.html' });
 
         // Generate Pages
@@ -586,49 +586,140 @@ app.post('/api/generate-report', async (req, res) => {
 
 // Login Endpoint
 app.post('/api/login', async (req, res) => {
-  try {
-    const { phone } = req.body;
-    if (!phone) return res.status(400).json({ error: 'Phone number is required' });
+    try {
+        const { phone } = req.body;
+        if (!phone) return res.status(400).json({ error: 'Phone number is required' });
 
-    // Find latest profile for this phone number
-    const student = await StudentProfile.findOne({ 'personalInfo.phone': phone })
-      .sort({ submittedAt: -1 });
+        // Find latest profile for this phone number
+        const student = await StudentProfile.findOne({ 'personalInfo.phone': phone })
+            .sort({ submittedAt: -1 });
 
-    if (!student) {
-      return res.status(404).json({ error: 'No record found for this mobile number.' });
-    }
-
-    res.json({
-      success: true,
-      student: {
-        id: student._id,
-        userInfo: student.personalInfo,
-        responses: {
-            raisec: student.assessment.raisec,
-            academic: student.assessment.academic
-        },
-        results: {
-            topBranches: student.results.topBranches,
-            raisecProfile: student.results.raisecProfile,
-            dominantType: student.results.dominantType,
-            aiInsight: student.results.aiInsight
+        if (!student) {
+            return res.status(404).json({ error: 'No record found for this mobile number.' });
         }
-      }
-    });
-  } catch (error) {
-    console.error('Login Error:', error);
-    res.status(500).json({ error: 'Server error during login' });
-  }
+
+        res.json({
+            success: true,
+            student: {
+                id: student._id,
+                userInfo: student.personalInfo,
+                responses: {
+                    raisec: student.assessment.raisec,
+                    academic: student.assessment.academic
+                },
+                results: {
+                    topBranches: student.results.topBranches,
+                    raisecProfile: student.results.raisecProfile,
+                    dominantType: student.results.dominantType,
+                    aiInsight: student.results.aiInsight
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Login Error:', error);
+        res.status(500).json({ error: 'Server error during login' });
+    }
+});
+
+// Public Student Endpoint
+app.get('/api/student/:id', async (req, res) => {
+    try {
+        const student = await StudentProfile.findById(req.params.id);
+        if (!student) return res.status(404).json({ error: 'Student not found' });
+
+        res.json({
+            success: true,
+            student: {
+                id: student._id,
+                userInfo: student.personalInfo,
+                responses: {
+                    raisec: student.assessment.raisec,
+                    academic: student.assessment.academic
+                },
+                results: {
+                    topBranches: student.results.topBranches,
+                    raisecProfile: student.results.raisecProfile,
+                    dominantType: student.results.dominantType,
+                    aiInsight: student.results.aiInsight
+                }
+            }
+        });
+    } catch (e) {
+        console.error('Get Student Error:', e);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// Admin Bulk Upload Endpoint
+// Admin Single Upsert Endpoint (Per Record)
+app.post('/api/admin/upsert-student', async (req, res) => {
+    try {
+        const { userInfo, responses, results: resultData, id } = req.body;
+
+        const filter = {};
+        if (userInfo.phone) filter['personalInfo.phone'] = userInfo.phone;
+        else if (userInfo.email) filter['personalInfo.email'] = userInfo.email;
+        else if (id) filter['_id'] = id;
+
+        if (resultData && resultData.topBranches) {
+            resultData.topBranches.forEach(item => {
+                if (item.branch) {
+                    if (typeof item.branch.exams === 'string') {
+                        try { item.branch.exams = JSON.parse(item.branch.exams); } catch (e) { }
+                    }
+                    if (typeof item.branch.subCareers === 'string') {
+                        try { item.branch.subCareers = JSON.parse(item.branch.subCareers); } catch (e) { }
+                    }
+                }
+            });
+        }
+
+        let savedProfile;
+        if (Object.keys(filter).length > 0) {
+            savedProfile = await StudentProfile.findOneAndUpdate(
+                filter,
+                {
+                    personalInfo: userInfo,
+                    assessment: { raisec: responses.raisec, academic: responses.academic },
+                    results: {
+                        topBranches: resultData.topBranches,
+                        raisecProfile: resultData.raisecProfile,
+                        dominantType: resultData.dominantType,
+                        aiInsight: resultData.aiInsight || ''
+                    },
+                    submittedAt: new Date()
+                },
+                { new: true, upsert: true }
+            );
+        } else {
+            savedProfile = await new StudentProfile({
+                personalInfo: userInfo,
+                assessment: { raisec: responses.raisec, academic: responses.academic },
+                results: {
+                    topBranches: resultData.topBranches,
+                    raisecProfile: resultData.raisecProfile,
+                    dominantType: resultData.dominantType,
+                    aiInsight: resultData.aiInsight || ''
+                },
+                submittedAt: new Date()
+            }).save();
+        }
+
+        res.json({ success: true, id: savedProfile._id, name: userInfo.fullName });
+    } catch (error) {
+        console.error('Upsert Error:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
 });
 
 // Start
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/future-fit')
-  .then(() => {
-      console.log('✅ MongoDB Connected');
-      preloadAssets().then(() => {
-          app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
-      });
-  })
-  .catch(err => console.error('❌ MongoDB Error:', err));
+    .then(() => {
+        console.log('✅ MongoDB Connected');
+        preloadAssets().then(() => {
+            app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+        });
+    })
+    .catch(err => console.error('❌ MongoDB Error:', err));
 
 module.exports = app;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import LandingPage from './components/LandingPage';
 import TestInstructions from './components/TestInstructions';
 import TestInterface from './components/TestInterface';
@@ -7,8 +7,11 @@ import ResultsView from './components/ResultsView';
 import LoginView from './components/LoginView';
 import Header from './components/Header';
 import StickyCTA from './components/StickyCTA';
+import AdminPortal from './components/AdminPortal';
+import PublicReport from './components/PublicReport';
 import { saveStudentData, loginStudent } from './services/apiService';
-import { UserResponses, UserInfo, AnalysisResult, calculateResults } from './services/scoringService';
+import { calculateResults } from './services/scoringService';
+import { UserResponses, UserInfo, AnalysisResult } from './types';
 import { Loader2 } from 'lucide-react';
 
 enum AppState {
@@ -18,7 +21,9 @@ enum AppState {
   TEST,
   SIGNUP,
   LOADING,
-  RESULTS
+  RESULTS,
+  ADMIN,
+  PUBLIC_REPORT
 }
 
 function App() {
@@ -27,6 +32,21 @@ function App() {
   const [userInfo, setInfo] = useState<UserInfo | null>(null);
   const [results, setResults] = useState<AnalysisResult | null>(null);
   const [studentId, setStudentId] = useState<string | null>(null);
+  const [publicId, setPublicId] = useState<string | null>(null);
+
+  // Simple Router Logic
+  useEffect(() => {
+    const path = window.location.pathname;
+    if (path === '/admin/upload') {
+      setAppState(AppState.ADMIN);
+    } else if (path.startsWith('/report/')) {
+      const id = path.split('/report/')[1];
+      if (id) {
+        setPublicId(id);
+        setAppState(AppState.PUBLIC_REPORT);
+      }
+    }
+  }, []);
 
   const startFlow = () => {
     setAppState(AppState.INSTRUCTIONS);
@@ -51,7 +71,7 @@ function App() {
     setInfo(info);
     if (responses) {
       setAppState(AppState.LOADING);
-      
+
       // 1. Use calculated results or recalculate if missing
       const finalResults = results || calculateResults(responses);
       if (!results) setResults(finalResults);
@@ -68,12 +88,12 @@ function App() {
   const handleLogin = async (phone: string): Promise<boolean> => {
     const data = await loginStudent(phone);
     if (data.success && data.student) {
-        setStudentId(data.student.id);
-        setInfo(data.student.userInfo);
-        setResponses(data.student.responses);
-        setResults(data.student.results);
-        setAppState(AppState.RESULTS);
-        return true;
+      setStudentId(data.student.id);
+      setInfo(data.student.userInfo);
+      setResponses(data.student.responses);
+      setResults(data.student.results);
+      setAppState(AppState.RESULTS);
+      return true;
     }
     return false;
   };
@@ -89,7 +109,7 @@ function App() {
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
       <Header showExit={appState !== AppState.LANDING} onRestart={restart} />
-      
+
       {/* Main Content Container with padding-top for fixed header */}
       <div className="pt-16 md:pt-20">
         {appState === AppState.LANDING && <LandingPage onStart={startFlow} onLogin={startLogin} />}
@@ -97,31 +117,34 @@ function App() {
         {appState === AppState.LOGIN && <LoginView onBack={() => setAppState(AppState.LANDING)} onLogin={handleLogin} />}
 
         {appState === AppState.INSTRUCTIONS && <TestInstructions onStart={startTest} />}
-        
+
         {appState === AppState.TEST && <TestInterface onComplete={handleTestComplete} />}
 
         {appState === AppState.SIGNUP && (
-          <SignupForm 
-            onSubmit={handleSignupComplete} 
-            topResult={results?.topBranches[0]} 
+          <SignupForm
+            onSubmit={handleSignupComplete}
+            topResult={results?.topBranches[0]}
             dominantType={results?.dominantType}
           />
         )}
-        
+
         {appState === AppState.LOADING && (
           <div className="min-h-[60vh] flex flex-col items-center justify-center">
-             <div className="relative">
-                <div className="w-16 h-16 border-4 border-slate-200 border-t-blue-600 rounded-full animate-spin"></div>
-                <Loader2 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 text-blue-600 animate-pulse" />
-             </div>
-             <p className="mt-8 text-xl font-medium text-slate-600 animate-pulse">Analyzing your profile...</p>
-             <p className="text-sm text-slate-400 mt-2">Connecting with AI engine</p>
+            <div className="relative">
+              <div className="w-16 h-16 border-4 border-slate-200 border-t-blue-600 rounded-full animate-spin"></div>
+              <Loader2 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 text-blue-600 animate-pulse" />
+            </div>
+            <p className="mt-8 text-xl font-medium text-slate-600 animate-pulse">Analyzing your profile...</p>
+            <p className="text-sm text-slate-400 mt-2">Connecting with AI engine</p>
           </div>
         )}
-        
+
         {appState === AppState.RESULTS && results && responses && userInfo && (
           <ResultsView results={results} responses={responses} studentId={studentId} onRestart={restart} userInfo={userInfo} />
         )}
+
+        {appState === AppState.ADMIN && <AdminPortal />}
+        {appState === AppState.PUBLIC_REPORT && publicId && <PublicReport studentId={publicId} />}
 
         {/* Sticky CTA - Visible on Landing and Results */}
         {(appState === AppState.LANDING || appState === AppState.RESULTS) && (
