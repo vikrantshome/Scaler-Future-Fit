@@ -191,7 +191,7 @@ const ResultsView: React.FC<ResultsViewProps> = ({ results, responses, studentId
                     </p>
                     <div className="flex flex-wrap gap-4">
                          {results.topBranches.some(b => ['cse', 'ai_ds', 'algo_trading', 'it'].includes(b.branch.id)) && (
-                            <a href="https://www.scaler.com/school-of-technology/" target="_blank" rel="noreferrer" className="inline-flex items-center bg-white text-slate-900 px-4 py-2 rounded-lg font-bold text-sm hover:bg-blue-50 transition-colors">
+                            <a href="https://scalerschooloftech.com/4qvgD5Y" target="_blank" rel="noreferrer" className="inline-flex items-center bg-white text-slate-900 px-4 py-2 rounded-lg font-bold text-sm hover:bg-blue-50 transition-colors">
                                 Explore Scaler School of Technology <ArrowRight className="w-4 h-4 ml-2" />
                             </a>
                          )}
@@ -287,7 +287,7 @@ const ResultsView: React.FC<ResultsViewProps> = ({ results, responses, studentId
                 <button onClick={onRestart} className="px-6 py-3 bg-white border border-slate-200 text-slate-600 font-semibold rounded-xl hover:bg-slate-50 transition-colors">
                     Retake Test
                 </button>
-                <a href="https://www.scaler.com/school-of-technology/" target="_blank" rel="noreferrer" className="px-6 py-3 bg-scaler-blue text-white font-bold rounded-xl shadow-lg hover:bg-blue-700 transition-colors">
+                <a href="https://scalerschooloftech.com/4qvgD5Y" target="_blank" rel="noreferrer" className="px-6 py-3 bg-scaler-blue text-white font-bold rounded-xl shadow-lg hover:bg-blue-700 transition-colors">
                     Apply to Scaler School of Technology
                 </a>
             </div>
