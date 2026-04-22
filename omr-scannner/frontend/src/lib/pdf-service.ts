@@ -48,6 +48,7 @@ export async function renderPageToImage(
     const renderContext = {
         canvasContext: context,
         viewport: viewport,
+        intent: 'print' // Forces synchronous rendering, bypassing requestAnimationFrame which stalls in background tabs
     };
 
     // @ts-ignore

@@ -64,6 +64,7 @@ export default function AdminPortal() {
                         else failCount++;
 
                         reportData.push({
+                            id: mapped.id,
                             ...mapped.userInfo,
                             ...mapped.responses.academic,
                             topCareer1: analysis.topBranches[0]?.branch.name,

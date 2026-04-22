@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { FileUploader } from './FileUploader';
 import { loadPDF, renderPageToImage } from '../lib/pdf-service';
-import { GeminiService } from '../lib/gemini-service';
+import { getAIService, type AIService } from '../lib/ai-service';
 import { OMR_PROMPTS } from '../lib/prompts';
 import { DataProcessor } from '../lib/data-processor';
 import type { StudentRecord } from '../lib/types';
@@ -22,17 +22,13 @@ export function Dashboard({ apiKey, modelName }: DashboardProps) {
     const [progress, setProgress] = useState(0);
 
     // Initialize service
-    const gemini = useRef(new GeminiService(apiKey, modelName));
+    const aiService = useRef<AIService>(getAIService(apiKey, modelName));
+    const lastConfig = useRef({ apiKey, modelName });
 
-    // Update service instance if model or key changes (though key unlikely to change without remount)
-    if (gemini.current['model'].model !== `models/${modelName}` && gemini.current['model'].model !== modelName) {
-        // Note: The internal model property might look like 'models/gemini-1.5-flash' vs input 'gemini-1.5-flash'.
-        // Simpler check: just recreate if props change significantly, or trust the ref mount logic.
-        // Actually, since Dashboard is re-mounted when apiKey changes (in parent), we just need to handle modelName changes if they could happen.
-        // But modelName only changes when apiKey is cleared in App.tsx. 
-        // So a simple useRef init is mostly fine, BUT React Strict Mode might invoke render twice.
-        // Let's just create a new instance if the stored one doesn't match the prop.
-        gemini.current = new GeminiService(apiKey, modelName);
+    // Update service instance if model or key changes
+    if (lastConfig.current.apiKey !== apiKey || lastConfig.current.modelName !== modelName) {
+        aiService.current = getAIService(apiKey, modelName);
+        lastConfig.current = { apiKey, modelName };
     }
 
     // Helper for logs
@@ -118,7 +114,11 @@ export function Dashboard({ apiKey, modelName }: DashboardProps) {
                 try {
                     addLog(`Classifying Page ${i}...`);
                     // 1. Classification Step
-                    const classification = await gemini.current.analyzeOMR(imageData, OMR_PROMPTS.CLASSIFY_PAGE);
+                    const classification = await aiService.current.analyzeOMR(
+                        imageData, 
+                        OMR_PROMPTS.CLASSIFY_PAGE,
+                        (attempt) => addLog(`Service busy (429/503). Retrying Page ${i} Classification (Attempt ${attempt})...`)
+                    );
                     const detectedType = classification.page_type || 0;
 
                     if (detectedType === 0) {
@@ -142,27 +142,57 @@ export function Dashboard({ apiKey, modelName }: DashboardProps) {
 
                     // 3. Extract Data
                     addLog(`Extracting data for Page ${i} (Type ${detectedType}) using ${modelName}...`);
-                    const result = await gemini.current.analyzeOMR(imageData, prompt);
+                    let result: any = null;
+                    let retryCount = 0;
+                    const maxRetries = 2;
+                    let currentPrompt = prompt;
 
-                    // --- CUSTOM LOGIC: Student ID Persistence ---
+                    while (retryCount <= maxRetries) {
+                        result = await aiService.current.analyzeOMR(
+                            imageData, 
+                            currentPrompt,
+                            (attempt) => addLog(`Service busy (429/503). Retrying Page ${i} Extraction (Attempt ${attempt})...`)
+                        );
+
+                        if (detectedType === 1) {
+                            const mobileRaw = result.mobile_number;
+                            const mobileDigits = mobileRaw ? String(mobileRaw).replace(/\D/g, '') : '';
+                            
+                            if (mobileRaw && mobileDigits.length !== 10) {
+                                addLog(`Notice: Extracted mobile number (${mobileRaw}) is not 10 digits. Retrying... (${retryCount + 1}/${maxRetries})`);
+                                retryCount++;
+                                currentPrompt = prompt + `\n\nIMPORTANT: You previously extracted "${mobileRaw}" for the mobile_number, which is incorrect because it is not exactly 10 digits. Please re-read the handwritten mobile number extremely carefully digit by digit. It MUST be EXACTLY 10 digits. Ignore any country codes like +91 or random scribbles.`;
+                                continue;
+                            }
+                        }
+                        break;
+                    }
+
+                    // --- CUSTOM LOGIC: Serial Student ID Linking ---
+                    // Normalize function to strip spaces/special chars from IDs
+                    const normalizeId = (id: any) => id ? String(id).replace(/[^a-zA-Z0-9]/g, '') : null;
+
                     if (detectedType === 1) {
-                        if (result.student_id) {
-                            currentStudentId = result.student_id;
+                        const rawId = result.student_id;
+                        currentStudentId = normalizeId(rawId);
+                        
+                        if (currentStudentId) {
+                            result.student_id = currentStudentId; // Update result with normalized ID
                             addLog(`Identified Student ID: ${currentStudentId}`);
                         } else {
-                            addLog(`Warning: No Student ID found on Page 1 (Page ${i})`);
-                            // Keep previous ID if we assume pages are mixed but belong to same batch? 
-                            // Or reset? User asked to "take student id from latest preceeding page 1".
-                            // So if P1 has no ID, we technically don't have a new ID.
-                            // But usually P1 defines the ID. Let's keep strictness unless requested otherwise.
-                            // Actually, if P1 fails to read ID, we shouldn't carry over OLD ID from previous P1, that would mix students.
+                            addLog(`Warning: No valid Student ID found on Page 1 (Page ${i})`);
                             currentStudentId = null;
                         }
                     } else {
-                        // For Pages 2, 3, 4 -> Inject stored ID
-                        if (!result.student_id && currentStudentId) {
+                        // For Pages 2, 3, 4 -> Unconditionally link to the current student session
+                        if (currentStudentId) {
+                            const detectedId = normalizeId(result.student_id);
+                            if (detectedId && detectedId !== currentStudentId) {
+                                addLog(`Notice: Correcting misread ID ${detectedId} -> ${currentStudentId} (Serial Link)`);
+                            }
                             result.student_id = currentStudentId;
-                            addLog(`Injected Student ID ${currentStudentId} into Page ${i}`);
+                        } else {
+                            addLog(`Warning: Page ${i} (Type ${detectedType}) has no preceding Page 1 ID. Record may be orphaned.`);
                         }
                     }
                     // ---------------------------------------------
@@ -200,7 +230,30 @@ export function Dashboard({ apiKey, modelName }: DashboardProps) {
 
     const downloadCSV = useCallback(() => {
         const data = Array.from(records.values());
-        const csv = Papa.unparse(data);
+        
+        // Gather all unique keys across all records to ensure no fields are dropped
+        const allKeys = data.reduce((keys, r) => {
+            Object.keys(r).forEach(k => keys.add(k));
+            return keys;
+        }, new Set<string>());
+        
+        // Define a logical order for the CSV columns
+        const baseColumns = ['status', 'student_id', 'full_name', 'email', 'school_name', 'city', 'date', 'mobile_number', 'grade'];
+        const otherColumns = Array.from(allKeys)
+            .filter(k => !baseColumns.includes(k) && k !== 'missing_pages')
+            .sort((a, b) => {
+                // Try to sort q1, q2, q10 numerically rather than alphabetically if they match the 'q' pattern
+                const aMatch = a.match(/^q(\d+)$/);
+                const bMatch = b.match(/^q(\d+)$/);
+                if (aMatch && bMatch) {
+                    return parseInt(aMatch[1]) - parseInt(bMatch[1]);
+                }
+                return a.localeCompare(b);
+            });
+            
+        const columns = [...baseColumns, ...otherColumns, 'missing_pages'];
+
+        const csv = Papa.unparse(data, { columns });
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         saveAs(blob, 'omr_results.csv');
     }, [records]);

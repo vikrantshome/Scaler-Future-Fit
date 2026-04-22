@@ -9,7 +9,7 @@ Extract the following fields into a JSON object:
   "school_name": "Read the school name",
   "city": "Read the city",
   "date": "Read the date (DD-MM-YYYY) from the digits",
-  "mobile_number": "Read the 10-digit mobile number",
+  "mobile_number": "Read the 10-digit mobile number very carefully digit by digit. It MUST be EXACTLY 10 digits.",
   "grade": "Read the 2-digit grade"
 }
 If a field is empty or unreadable, set it to null or empty string.

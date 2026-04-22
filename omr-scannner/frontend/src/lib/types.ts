@@ -59,6 +59,22 @@ export const StudentRecordSchema = Page1Schema.extend({
     missing_pages: z.array(z.number()).default([]),
 });
 
+export type AIProvider = 'google' | 'zai' | 'openrouter';
+
+export interface ModelConfig {
+    id: string;
+    name: string;
+    provider: AIProvider;
+}
+
+export const SUPPORTED_MODELS: ModelConfig[] = [
+    { id: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash', provider: 'google' },
+    { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash', provider: 'google' },
+    { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', provider: 'google' },
+    { id: 'glm-4.6v-flash', name: 'GLM-4.6V-Flash', provider: 'zai' },
+    { id: 'openrouter/auto', name: 'OpenRouter Free (Auto)', provider: 'openrouter' },
+];
+
 export type Page1Data = z.infer<typeof Page1Schema>;
 export type Page2Data = z.infer<typeof Page2Schema>;
 export type Page3Data = z.infer<typeof Page3Schema>;

@@ -3,19 +3,27 @@ import { ApiKeyModal } from './components/ApiKeyModal';
 import { Dashboard } from './components/Dashboard';
 
 function App() {
-  const [apiKey, setApiKey] = useState<string | null>(sessionStorage.getItem('gemini_api_key'));
-  const [model, setModel] = useState<string>(sessionStorage.getItem('gemini_model') || 'gemini-2.5-flash');
+  // Migration logic: check for old gemini_* keys and move them to ai_*
+  const initialKey = sessionStorage.getItem('ai_api_key') || sessionStorage.getItem('gemini_api_key');
+  const initialModel = sessionStorage.getItem('ai_model') || sessionStorage.getItem('gemini_model') || 'gemini-2.5-flash';
+
+  const [apiKey, setApiKey] = useState<string | null>(initialKey);
+  const [model, setModel] = useState<string>(initialModel);
 
   const handleSaveKey = (key: string, modelName: string) => {
-    sessionStorage.setItem('gemini_api_key', key);
-    sessionStorage.setItem('gemini_model', modelName);
+    sessionStorage.setItem('ai_api_key', key);
+    sessionStorage.setItem('ai_model', modelName);
+    // Cleanup old keys
+    sessionStorage.removeItem('gemini_api_key');
+    sessionStorage.removeItem('gemini_model');
+    
     setApiKey(key);
     setModel(modelName);
   };
 
   const handleClearKey = () => {
+    sessionStorage.removeItem('ai_api_key');
     sessionStorage.removeItem('gemini_api_key');
-    // We optionally keep the model preference or clear it too. Let's keep it for convenience.
     setApiKey(null);
   };
 
@@ -27,7 +35,7 @@ function App() {
           <div className="w-8 h-8 bg-black text-white rounded flex items-center justify-center font-bold text-xl">S</div>
           <div>
             <h1 className="font-bold leading-tight">Scaler OMR Scanner</h1>
-            <p className="text-xs text-gray-500">AI-Powered • Frontend Only</p>
+            <p className="text-xs text-gray-500">AI-Powered • Multi-Model • Frontend Only</p>
           </div>
         </div>
         <div>
@@ -38,7 +46,7 @@ function App() {
                 onClick={handleClearKey}
                 className="text-xs text-red-500 hover:underline"
               >
-                Clear API Key
+                Clear Credentials
               </button>
             </div>
           )}
